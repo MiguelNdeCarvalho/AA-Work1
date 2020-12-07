@@ -33,9 +33,6 @@ class myDecisionTreeREPrune:
     self.tree = DecisionTreeClassifier(min_impurity_decrease=0) #defaul: (criterion='gini')
     self.impureza = 0; 
 
-  def myfunc(self):
-    print("Hello my name is " + self.name)
-
   def setGini(self):
     self.tree = DecisionTreeClassifier(criterion="gini")
   
@@ -61,16 +58,6 @@ class myDecisionTreeREPrune:
       
       return self.tree.score(X_test, y_test)*100 #+ conjunto de teste
 
-
-
-iris_dataset = load_iris()
-X_train, X_test, y_train, y_test = train_test_split(iris_dataset['data'], iris_dataset['target'], random_state=0)
-
-tree = myDecisionTreeREPrune()
-
-tree.fit(X_train, y_train)
-print(tree.score(X_test,y_test))
-
 #falta implementar o Reduced-error pruning (slides)
 
 """
@@ -89,3 +76,12 @@ classifier.fit(x_train, y_train)
 result = classifier.score(x_test, y_test)
 print("Percentagem de casos corretamente classificados {:2.2%}".format(result))
 """
+
+if __name__ == '__main__':
+  iris_dataset = load_iris()
+  X_train, X_test, y_train, y_test = train_test_split(iris_dataset['data'], iris_dataset['target'], random_state=0)
+
+  tree = myDecisionTreeREPrune()
+
+  tree.fit(X_train, y_train)
+  print(tree.score(X_test,y_test))
