@@ -73,4 +73,19 @@ print(tree.score(X_test,y_test))
 
 #falta implementar o Reduced-error pruning (slides)
 
+"""
+# imports
+# código
+# etc  
 
+data=np.genfromtxt("weather.nominal.csv", delimiter=",", dtype=None, encoding=None)
+xdata=data[1:,0:-1]    #  dados: da segunda à ultima linha, da primeira à penúltima coluna  
+ydata=data[1:,-1]      # classe: da segunda à ultima linha, só última coluna
+
+x_train, x_test, y_train, y_test = train_test_split(xdata, ydata, random_state=0)
+
+classifier = myDecisionTreeREPrune()
+classifier.fit(x_train, y_train)
+result = classifier.score(x_test, y_test)
+print("Percentagem de casos corretamente classificados {:2.2%}".format(result))
+"""
