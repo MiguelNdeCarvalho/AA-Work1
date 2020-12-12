@@ -26,6 +26,7 @@ from sklearn.utils import resample
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+import argparse
 
 class myDecisionTreeREPrune: 
     
@@ -78,10 +79,20 @@ print("Percentagem de casos corretamente classificados {:2.2%}".format(result))
 """
 
 if __name__ == '__main__':
-  iris_dataset = load_iris()
-  X_train, X_test, y_train, y_test = train_test_split(iris_dataset['data'], iris_dataset['target'], random_state=0)
 
-  tree = myDecisionTreeREPrune()
+    parser = argparse.ArgumentParser()        
+    parser.add_argument('-f', "-file", action='store', dest='file_location', help='Path to the file that contains the data', required=True)
+    parser.add_argument('-c', '-criterion', action='store', dest='criterion', help='Choose criterion, it can be Gini or Entropy. By default: Gini', default='gini')
+    parser.add_argument('-p', '-prune', action='store_false', dest='prune', help='Set prune. By default: False', default=False)              
+    results = parser.parse_args()                                                                                                                                                         
+    print(results.file_location)
+    print(results.criterion)        
+    print(results.prune)
 
-  tree.fit(X_train, y_train)
-  print(tree.score(X_test,y_test))
+  # iris_dataset = load_iris()
+  # X_train, X_test, y_train, y_test = train_test_split(iris_dataset['data'], iris_dataset['target'], random_state=0)
+
+  # tree = myDecisionTreeREPrune()
+
+  # tree.fit(X_train, y_train)
+  # print(tree.score(X_test,y_test))
