@@ -17,7 +17,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.datasets import load_iris
 from sklearn.model_selection import cross_val_score
 import pandas as pd
-from sklearn import preprocessing
+from sklearn.preprocessing import OrdinalEncoder
 
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
@@ -95,14 +95,25 @@ if __name__ == '__main__':
     xdata=data[1:,0:-1]    #  dados: da segunda à ultima linha, da primeira à penúltima coluna  
     ydata=data[1:,-1]      # classe: da segunda à ultima linha, só última coluna
 
+    ord_enc = OrdinalEncoder()
+    xdata = ord_enc.fit_transform(xdata)
+    ydata = np.array(ydata).reshape((len(ydata),1))
+    ydata = ord_enc.fit_transform(ydata)
+
+    print(xdata)
+    print(ydata)
+
     x_train, x_test, y_train, y_test = train_test_split(xdata, ydata, random_state=0)
 
-    print(x_train)
-    print(x_test)
+
+  
+
+    classifier = myDecisionTreeREPrune()
+    classifier.fit(x_train, y_train)
+    result = classifier.score(x_test, y_test)
+
+    #xdata = ord_enc.inverse_transform(xdata)
 
 
+    print("Percentagem de casos corretamente classificados {:2.2%}".format(result))
 
-    #classifier = myDecisionTreeREPrune()
-    #classifier.fit(x_train, y_train)
-    #result = classifier.score(x_test, y_test)
-    #print("Percentagem de casos corretamente classificados {:2.2%}".format(result))
