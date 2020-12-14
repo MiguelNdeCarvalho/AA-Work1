@@ -18,6 +18,9 @@ from sklearn.datasets import load_iris
 from sklearn.model_selection import cross_val_score
 import pandas as pd
 from sklearn.preprocessing import OrdinalEncoder
+from sklearn import tree as boas
+
+
 
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
@@ -36,11 +39,8 @@ class myDecisionTreeREPrune:
     self.tree = DecisionTreeClassifier(min_impurity_decrease=0) #defaul: (criterion='gini')
     self.impureza = 0; 
 
-  def setGini(self):
-    self.tree = DecisionTreeClassifier(criterion="gini")
-  
-  def setEntropy(self):
-    self.tree = DecisionTreeClassifier(criterion="entropy")
+  def setCriterion(self, criterion):
+    self.tree = DecisionTreeClassifier(criterion=criterion)
 
   def setImpureza(self,x):
     self.impureza = x
@@ -48,7 +48,7 @@ class myDecisionTreeREPrune:
       
   def getImpureza(self):
     return self.impureza 
-  
+
 
 
   def fit(self,X_train, y_train):
@@ -88,6 +88,7 @@ if __name__ == '__main__':
     parser.add_argument('-p', '-prune', action='store_false', dest='prune', help='Set prune. By default: False', default=False)              
     results = parser.parse_args()
 
+
     data=np.genfromtxt(results.file_location, delimiter=",", dtype=None, encoding=None)
     xdata=data[1:,0:-1]    #  dados: da segunda à ultima linha, da primeira à penúltima coluna  
     ydata=data[1:,-1]      # classe: da segunda à ultima linha, só última coluna
@@ -97,20 +98,17 @@ if __name__ == '__main__':
     ydata = np.array(ydata).reshape((len(ydata),1))
     ydata = ord_enc.fit_transform(ydata)
 
-    print(xdata)
-    print(ydata)
-
     x_train, x_test, y_train, y_test = train_test_split(xdata, ydata, random_state=0)
 
+    tree = myDecisionTreeREPrune()
+    tree.setCriterion(results.criterion)
+      
+    tree.fit(x_train, y_train)
 
-  
-
-    classifier = myDecisionTreeREPrune()
-    classifier.fit(x_train, y_train)
-    result = classifier.score(x_test, y_test)
+    result = tree.score(x_test, y_test)
 
     #xdata = ord_enc.inverse_transform(xdata)
 
+    print("Percentagem de casos corretamente classificados {value}%".format(value=result))
 
-    print("Percentagem de casos corretamente classificados {:2.2%}".format(result))
 
