@@ -86,10 +86,7 @@ if __name__ == '__main__':
     parser.add_argument('-f', "-file", action='store', dest='file_location', help='Path to the file that contains the data', required=True)
     parser.add_argument('-c', '-criterion', action='store', dest='criterion', help='Choose criterion, it can be Gini or Entropy. By default: Gini', default='gini')
     parser.add_argument('-p', '-prune', action='store_false', dest='prune', help='Set prune. By default: False', default=False)              
-    results = parser.parse_args()                                                                                                                                                         
-    print(results.file_location)
-    print(results.criterion)        
-    print(results.prune)
+    results = parser.parse_args()
 
     data=np.genfromtxt(results.file_location, delimiter=",", dtype=None, encoding=None)
     xdata=data[1:,0:-1]    #  dados: da segunda à ultima linha, da primeira à penúltima coluna  
