@@ -1,55 +1,35 @@
-print(__doc__)
-
+import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from mlxtend.plotting import plot_decision_regions
+from sklearn import tree
 
-from sklearn.datasets import load_iris
-from sklearn.tree import DecisionTreeClassifier, plot_tree
 
-# Parameters
-n_classes = 3
-plot_colors = "ryb"
-plot_step = 0.02
+iris = datasets.load_iris()
+X = iris.data[:, 2:]
+y = iris.target
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1, stratify=y)
+clf_tree = DecisionTreeClassifier(criterion='gini', max_depth=4, random_state=1)
+clf_tree.fit(X_train, y_train)
 
-# Load data
-iris = load_iris()
+X_combined = np.vstack((X_train, X_test))
+y_combined = np.hstack((y_train, y_test))
 
-for pairidx, pair in enumerate([[0, 1], [0, 2], [0, 3],
-                                [1, 2], [1, 3], [2, 3]]):
-    # We only take the two corresponding features
-    X = iris.data[:, pair]
-    y = iris.target
 
-    # Train
-    clf = DecisionTreeClassifier().fit(X, y)
+fig, ax = plt.subplots(figsize=(7, 7))
+plot_decision_regions(X_combined, y_combined, clf=clf_tree)
+plt.xlabel('petal length [cm]')
+plt.ylabel('petal width [cm]')
+plt.legend(loc='upper left')
+plt.tight_layout()
 
-    # Plot the decision boundary
-    plt.subplot(2, 3, pairidx + 1)
 
-    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    xx, yy = np.meshgrid(np.arange(x_min, x_max, plot_step),
-                         np.arange(y_min, y_max, plot_step))
-    plt.tight_layout(h_pad=0.5, w_pad=0.5, pad=2.5)
 
-    Z = clf.predict(np.c_[xx.ravel(), yy.ravel()])
-    Z = Z.reshape(xx.shape)
-    cs = plt.contourf(xx, yy, Z, cmap=plt.cm.RdYlBu)
+fig, ax = plt.subplots(figsize=(10, 10))
 
-    plt.xlabel(iris.feature_names[pair[0]])
-    plt.ylabel(iris.feature_names[pair[1]])
+tree.plot_tree(clf_tree, fontsize=10)
 
-    # Plot the training points
-    for i, color in zip(range(n_classes), plot_colors):
-        idx = np.where(y == i)
-        plt.scatter(X[idx, 0], X[idx, 1], c=color, label=iris.target_names[i],
-                    cmap=plt.cm.RdYlBu, edgecolor='black', s=15)
-
-plt.suptitle("Decision surface of a decision tree using paired features")
-plt.legend(loc='lower right', borderpad=0, handletextpad=0)
-plt.axis("tight")
-
-plt.figure()
-clf = DecisionTreeClassifier().fit(iris.data, iris.target)
-plot_tree(clf, filled=True)
 plt.show()

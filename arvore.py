@@ -18,7 +18,7 @@ from sklearn.datasets import load_iris
 from sklearn.model_selection import cross_val_score
 import pandas as pd
 from sklearn.preprocessing import OrdinalEncoder
-from sklearn import tree as boas
+from sklearn import tree as TreeModule
 
 
 
@@ -103,12 +103,16 @@ if __name__ == '__main__':
     tree = myDecisionTreeREPrune()
     tree.setCriterion(results.criterion)
       
-    tree.fit(x_train, y_train)
+    clf_tree = tree.fit(x_train, y_train)
 
     result = tree.score(x_test, y_test)
 
     #xdata = ord_enc.inverse_transform(xdata)
 
     print("Percentagem de casos corretamente classificados {value}%".format(value=result))
+
+    fig, ax = plt.subplots(figsize=(10, 10))
+    TreeModule.plot_tree(clf_tree, fontsize=10)
+    plt.show()
 
 
