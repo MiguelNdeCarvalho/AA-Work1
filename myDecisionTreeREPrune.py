@@ -1,20 +1,5 @@
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.datasets import load_iris
-from sklearn.model_selection import cross_val_score
-import pandas as pd
-from sklearn.preprocessing import OrdinalEncoder
-from sklearn import tree as TreeModule
 
-
-
-from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import confusion_matrix
-from sklearn.utils import resample
-
-import matplotlib
-import matplotlib.pyplot as plt
 import numpy as np
 import argparse
 
@@ -26,18 +11,27 @@ class myDecisionTreeREPrune:
         self.criterion='gini'
         self.prune=True
 
+        self.sample_size = 0
+        self.root = Node()
+
 
     def __init__(self,crit,pru):
 
         self.criterion = crit
         self.prune = pru
 
+
+
     #metodos
-    def fit(x,y):
+    def fit(self,x,y):
         
-        """
-        if Homogeneo(D) 
+        D = [x,y]
+
+        if Homogeneo(D): 
             return Etiqueta(D)
+        
+
+        """
         S = MelhorParticao(D, F) #
         divide D em subconjuntos Di de acordo com os literais em S;
         foreach i do
@@ -52,25 +46,28 @@ class myDecisionTreeREPrune:
         
         return 0
 
-    def score(x,y):
+    def score(self,x,y):
+        
+        #percorrer a arvore com cada um dos exemplos (interate_for)
+        return 0
+
+    def iterate_for(self,objeto):
+        return 0 #class atribuida ao objeto
+
+    def prune(self):
+        return 0
+
+    #funçoes auxiliar
+    def homogeneous(D):     #folha instantanea 
         
         
-        return 0
+        
+        return 0  #true/false
 
-    def setCriterion(self, criterion):
-        return 0
+    def tag(D):      
+        return 0 #node
 
-    def setImpureza(self,x):
-        return 0
-
-    #funçao auxiliar
-    def homogeneo(D):
-        return 0
-
-    def etiqueta(D):
-        return 0
-
-    def melhorDivisao(D, F):
+    def bestDivision(D, F):
         
         """
         Função deve medir a pureza da divisão
@@ -82,7 +79,16 @@ class myDecisionTreeREPrune:
             ○deve ser máxima quando a proporção é 1/2
         """
 
+        return 0 #node
+
+    def entropy(D):
+        
+        
         return 0
+    
+    def gini(D):
+        return 0
+
 
 if __name__ == '__main__':
 
@@ -96,15 +102,14 @@ if __name__ == '__main__':
     data=np.genfromtxt(results.file_location, delimiter=",", dtype=None, encoding=None)
     xdata=data[1:,0:-1]    #  dados: da segunda à ultima linha, da primeira à penúltima coluna  
     ydata=data[1:,-1]      # classe: da segunda à ultima linha, só última coluna
-    attributes = data[0,:]
+    attributes = data[0,:-1]
+    classes = data[0,-1]
+
 
     print(attributes)
+    print(xdata)
+    print(classes)
+    print(ydata)
 
-    ord_enc = OrdinalEncoder()
-    xdata = ord_enc.fit_transform(xdata)
-    ydata = np.array(ydata).reshape((len(ydata),1))
-    ydata = ord_enc.fit_transform(ydata)
+    x_train, x_test, y_train, y_test = train_test_split(xdata, ydata, random_state=0) #default test_size=25
 
-    x_train, x_test, y_train, y_test = train_test_split(xdata, ydata, random_state=0)
-
-    print(x_train)

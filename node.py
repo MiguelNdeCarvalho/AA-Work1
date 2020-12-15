@@ -1,39 +1,47 @@
+from typing import NamedTuple
+
+class Data(NamedTuple):
+
+    
+
+    imp: float #se folha then = 0
+    values: list
+
 class Node:
 
-    def __init__(self, data):
+    def __init__(self):
 
-        self.left = None
-        self.right = None
-        self.data = data
+        self.sons = []
+        self.data = Data()
+    
+    def __init__(self,data=None):
 
-    def insert(self, data):
-# Compare the new value with the parent node
-        if self.data:
-            if data < self.data:
-                if self.left is None:
-                    self.left = Node(data)
-                else:
-                    self.left.insert(data)
-            elif data > self.data:
-                if self.right is None:
-                    self.right = Node(data)
-                else:
-                    self.right.insert(data)
-        else:
+        if data is not None:
             self.data = data
+        self.sons = []
 
-# Print the tree
-    def PrintTree(self):
-        if self.left:
-            self.left.PrintTree()
-        print( self.data),
-        if self.right:
-            self.right.PrintTree()
+    def __str__(self):
+        return "Filhos:" + str(self.sons) + " " + str(self.data)
 
-# Use the insert method to add nodes
-root = Node(12)
-root.insert(6)
-root.insert(14)
-root.insert(3)
+    def is_leaf(self):
+        if len(self.sons) == 0:
+            return True
+        else:
+            return False
 
-root.PrintTree()
+    def set_Data(self,data):
+        self.data = data
+    
+    def get_Data(self):
+        return self.data
+    
+    def printData(self):
+        print(self.data)
+
+    def printSons(self):
+        print(self.sons)
+
+no1 = Node()
+data = Data(imp=0.5,values=[3,2])
+no = Node(data)
+print(no.is_leaf())
