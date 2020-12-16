@@ -2,7 +2,7 @@ from typing import NamedTuple
 
 class Data(NamedTuple):
 
-    
+    #identificadores de nos
 
     imp: float #se folha then = 0
     values: list

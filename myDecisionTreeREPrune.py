@@ -15,23 +15,54 @@ class myDecisionTreeREPrune:
         self.root = Node()
 
 
-    def __init__(self,crit,pru):
+    def __init__(self,crit=None,pru=None):
+        
+        if crit is not None:
+            self.criterion = crit
 
-        self.criterion = crit
-        self.prune = pru
+        if pru is not None:
+            self.prune = pru
+
+
 
 
 
     #metodos
     def fit(self,x,y):
         
-        D = [x,y]
+        n_samples = len(x)
+        n_attributes = len(x[0])
+        n_classes = len(y[0])
 
-        if Homogeneo(D): 
-            return Etiqueta(D)
+        attributes = []
+        classes = []
+
+        for attr in range(n_attributes):
+
+            new_attr = set()
+
+            for sample in range(n_samples):
+                new_attr.add(x[sample][attr])
+
+            attributes.append(new_attr)
+
+        for classe in range(n_classes):
+
+            new_class = set()
+
+            for sample in range(n_samples):
+                new_class.add(y[sample][classe])
+
+            classes.append(new_class)
+        
+        print(attributes)
+        print(classes)
+        
+        """
+        if homogeneous(D): 
+            return tag(D)
         
 
-        """
         S = MelhorParticao(D, F) #
         divide D em subconjuntos Di de acordo com os literais em S;
         foreach i do
@@ -48,7 +79,7 @@ class myDecisionTreeREPrune:
 
     def score(self,x,y):
         
-        #percorrer a arvore com cada um dos exemplos (interate_for)
+        #percorrer a arvore com cada um dos exemplos (iterate_for)
         return 0
 
     def iterate_for(self,objeto):
@@ -102,14 +133,11 @@ if __name__ == '__main__':
     data=np.genfromtxt(results.file_location, delimiter=",", dtype=None, encoding=None)
     xdata=data[1:,0:-1]    #  dados: da segunda à ultima linha, da primeira à penúltima coluna  
     ydata=data[1:,-1]      # classe: da segunda à ultima linha, só última coluna
-    attributes = data[0,:-1]
-    classes = data[0,-1]
-
-
-    print(attributes)
+    ydata = np.reshape(ydata,(-1,1))
     print(xdata)
-    print(classes)
     print(ydata)
 
     x_train, x_test, y_train, y_test = train_test_split(xdata, ydata, random_state=0) #default test_size=25
 
+    tree = myDecisionTreeREPrune()
+    tree.fit(x_train,y_train)
