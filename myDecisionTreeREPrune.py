@@ -32,7 +32,7 @@ class myDecisionTreeREPrune:
         
         n_samples = len(x)
         n_attributes = len(x[0])
-        n_classes = len(y[0])
+        n_classes = 1
 
         attributes = []
         classes = []
@@ -55,14 +55,14 @@ class myDecisionTreeREPrune:
 
             classes.append(new_class)
         
-        print(attributes)
-        print(classes)
-        
-        """
-        if homogeneous(D): 
-            return tag(D)
+
         
 
+        if homogeneous(y): 
+            print (True)
+            return 0 #tag(D)
+        
+        """
         S = MelhorParticao(D, F) #
         divide D em subconjuntos Di de acordo com os literais em S;
         foreach i do
@@ -88,37 +88,45 @@ class myDecisionTreeREPrune:
     def prune(self):
         return 0
 
-    #funçoes auxiliar
-    def homogeneous(D):     #folha instantanea 
-        
-        
-        
-        return 0  #true/false
-
-    def tag(D):      
-        return 0 #node
-
-    def bestDivision(D, F):
-        
-        """
-        Função deve medir a pureza da divisão
-            ○Os filhos são "puros" se todos os seus exemplos pertencerem à mesma classe
-
-        Função de impureza (assume atributos booleanos e 2 classes)
-            ○depende apenas da magnitude relativa (proporção p) do nº de exemplos de cada classe○deve ter o mesmo valor trocando a classe positiva e negativa
-            ○deve ser 0 sempre que a proporção é 0 ou 1
-            ○deve ser máxima quando a proporção é 1/2
-        """
-
-        return 0 #node
-
-    def entropy(D):
-        
-        
-        return 0
+#funçoes auxiliar
+def homogeneous(y):     #folha instantanea 
     
-    def gini(D):
-        return 0
+    print(len(y))
+
+    ref_value = y[0][0]
+
+    print(ref_value)
+
+    for samples in range(len(y)):
+        if ref_value != y[samples][0]:
+            return False
+
+    return True  
+
+def tag(D):      
+    return 0 #node
+
+def bestDivision(D, F):
+    
+    """
+    Função deve medir a pureza da divisão
+        ○Os filhos são "puros" se todos os seus exemplos pertencerem à mesma classe
+
+    Função de impureza (assume atributos booleanos e 2 classes)
+        ○depende apenas da magnitude relativa (proporção p) do nº de exemplos de cada classe○deve ter o mesmo valor trocando a classe positiva e negativa
+        ○deve ser 0 sempre que a proporção é 0 ou 1
+        ○deve ser máxima quando a proporção é 1/2
+    """
+
+    return 0 #node
+
+def entropy(D):
+    
+    
+    return 0
+
+def gini(D):
+    return 0
 
 
 if __name__ == '__main__':
@@ -134,8 +142,7 @@ if __name__ == '__main__':
     xdata=data[1:,0:-1]    #  dados: da segunda à ultima linha, da primeira à penúltima coluna  
     ydata=data[1:,-1]      # classe: da segunda à ultima linha, só última coluna
     ydata = np.reshape(ydata,(-1,1))
-    print(xdata)
-    print(ydata)
+
 
     x_train, x_test, y_train, y_test = train_test_split(xdata, ydata, random_state=0) #default test_size=25
 
