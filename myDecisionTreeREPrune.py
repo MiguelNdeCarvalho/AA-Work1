@@ -37,6 +37,7 @@ class myDecisionTreeREPrune:
         attributes = []
         classes = []
 
+
         for attr in range(n_attributes):
 
             new_attr = set()
@@ -55,15 +56,17 @@ class myDecisionTreeREPrune:
 
             classes.append(new_class)
         
-
+        print(attributes)
+        print(classes)
         
 
         if homogeneous(y): 
             print (True)
-            return 0 #tag(D)
+             #return tag(D)
+        
+        S = bestDivision(x,y,attributes) 
         
         """
-        S = MelhorParticao(D, F) #
         divide D em subconjuntos Di de acordo com os literais em S;
         foreach i do
             if Di não vazio:
@@ -103,10 +106,14 @@ def homogeneous(y):     #folha instantanea
 
     return True  
 
-def tag(D):      
-    return 0 #node
 
-def bestDivision(D, F):
+def bestDivision(x,y,attributes):
+    
+    best_attribute=0
+
+    for attri in range(len(attributes)):
+        
+        result = entropy(x,y, attributes[attri])
     
     """
     Função deve medir a pureza da divisão
@@ -118,14 +125,24 @@ def bestDivision(D, F):
         ○deve ser máxima quando a proporção é 1/2
     """
 
-    return 0 #node
 
-def entropy(D):
+
+    return 0 #root
+
+def entropy(x,y, attri):
     
+    print(attri)
+    values = []
+
+    """
+    for value in attri:
+        for classe in range(len(y)):
+            if y[classe] == value
+    """
     
     return 0
 
-def gini(D):
+def gini(x,y, attri):
     return 0
 
 

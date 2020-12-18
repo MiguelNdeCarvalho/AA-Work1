@@ -1,18 +1,9 @@
-from typing import NamedTuple
-
-class Data(NamedTuple):
-
-    #identificadores de nos
-
-    imp: float #se folha then = 0
-    values: list
-
 class Node:
 
     def __init__(self):
 
         self.sons = []
-        self.data = Data()
+        self.data = ""
     
     def __init__(self,data=None):
 
@@ -42,6 +33,6 @@ class Node:
         print(self.sons)
 
 no1 = Node()
-data = Data(imp=0.5,values=[3,2])
+data = "outlook"
 no = Node(data)
-print(no.is_leaf())
+print(no.get_Data())
