@@ -1,18 +1,6 @@
 import math
 import numpy
 
-
-# 2º Calcular entropy para cada value de cada atributo. Ex: Sunny, Rainny, Overcast do Outlook
-
-def count_p_n_global(data):
-    p,n = 0,0
-    for value in data:
-        if value == "yes":
-            p +=1
-        elif value == "no":
-            n +=1
-    return p,n
-
 data=numpy.genfromtxt("dados/weather.nominal.csv", delimiter=",", dtype=None, encoding=None)
 xdata=data[1:,0:-1]
 ydata=data[1:,-1]
