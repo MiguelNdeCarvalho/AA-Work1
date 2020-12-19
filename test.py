@@ -67,9 +67,16 @@ def calculateGain(attribute, attributeList, xdata, ydata, entropyGlobalValues ,e
         entropy = entropyCalc(entropyValues)
         total += (sum(entropyValues) / sum(entropyGlobalValues)) * entropy    
     gain = entropyGlobal - total
-    print(gain)
+    return gain
 
-calculateGain("windy", attributeList, xdata, ydata, entropyGlobalValues, entropyGlobal)
+def chooseNode(attributeList):
+    aux = []
+    for attribute in attributeList[0]:
+        aux.append(calculateGain(attribute, attributeList, xdata, ydata, entropyGlobalValues, entropyGlobal))
+    index = aux.index(max(aux))
+    return attributeList[0][index]
+
+print(chooseNode(attributeList))
 
 # valuePOrN = countValuePOrN("windy", attributeList, "TRUE", xdata, ydata)
 # print(values)
