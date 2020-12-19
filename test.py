@@ -1,7 +1,7 @@
 import math
 import numpy
 
-def entropy(p,n):
+def entropy(p,n,m):
     return (-p/(p+n)) * math.log2(p/(p+n)) - (n/(p+n)) * math.log2(n/(p+n))
 
 # def entropy_value(p_atribute,n_atribute,p,n):
@@ -43,7 +43,7 @@ def getValues(data, attributeList, attribute):
 def countValuePOrN(attribute, attributeList, value, xdata, ydata): # Get numbers of Positive and Negatives in a value
     countP, countN = 0,0
     attributePos = numpy.where(attributeList == attribute)
-    for x,y in zip(xdata,ydata):
+    for x,y in zip(xdata,lydata):
         if x[attributePos[1][0]] == value:
             if y == "yes":
                 countP += 1

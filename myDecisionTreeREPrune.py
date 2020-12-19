@@ -35,8 +35,6 @@ class myDecisionTreeREPrune:
         n_classes = len(y[0])
 
         attributes = []
-        classes = []
-
 
         for attr in range(n_attributes):
 
@@ -54,7 +52,7 @@ class myDecisionTreeREPrune:
             for sample in range(n_samples):
                 new_class.add(y[sample][classe])
 
-            classes.append(new_class)
+            classes = new_class
         
         print(attributes)
         print(classes)
@@ -140,17 +138,21 @@ def entropy(x,y, attri,classes):
 
     for value in attri:
 
-        save = []
+        a = [None] * len(classes)
+
+        for x in range(len(classes)):
+            a[x]=0
 
         for row in range(len(y)):
             for classe in range(len(classes)):
-                if y[row] == classes[classe]:
-                    pass
+                print(y[row][0], classes)
+                break
+                if y[row][0] in classes[classe]:
+                    a[classe]+=1
+        
+        values.append(a)
 
-
-
-                    
-    
+    print(values)
     return 0
 
 def gini(x,y, attri):
