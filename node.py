@@ -32,7 +32,9 @@ class Node:
     def printSons(self):
         print(self.sons)
 
+"""
 no1 = Node()
 data = "outlook"
 no = Node(data)
 print(no.get_Data())
+"""

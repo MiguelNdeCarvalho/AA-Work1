@@ -32,7 +32,7 @@ class myDecisionTreeREPrune:
         
         n_samples = len(x)
         n_attributes = len(x[0])
-        n_classes = 1
+        n_classes = len(y[0])
 
         attributes = []
         classes = []
@@ -62,9 +62,10 @@ class myDecisionTreeREPrune:
 
         if homogeneous(y): 
             print (True)
-             #return tag(D)
+            return tag(self,x,y)
         
-        S = bestDivision(x,y,attributes) 
+        S = bestDivision(x,y,attributes,classes) 
+
         
         """
         divide D em subconjuntos Di de acordo com os literais em S;
@@ -92,6 +93,10 @@ class myDecisionTreeREPrune:
         return 0
 
 #funçoes auxiliar
+def tag(tree,x,y):
+    self.root = Node(y[0])
+    return self
+
 def homogeneous(y):     #folha instantanea 
     
     print(len(y))
@@ -107,13 +112,13 @@ def homogeneous(y):     #folha instantanea
     return True  
 
 
-def bestDivision(x,y,attributes):
+def bestDivision(x,y,attributes,classes):
     
     best_attribute=0
 
     for attri in range(len(attributes)):
         
-        result = entropy(x,y, attributes[attri])
+        result = entropy(x,y, attributes[attri],classes)
     
     """
     Função deve medir a pureza da divisão
@@ -129,16 +134,22 @@ def bestDivision(x,y,attributes):
 
     return 0 #root
 
-def entropy(x,y, attri):
+def entropy(x,y, attri,classes):
     
-    print(attri)
     values = []
 
-    """
     for value in attri:
-        for classe in range(len(y)):
-            if y[classe] == value
-    """
+
+        save = []
+
+        for row in range(len(y)):
+            for classe in range(len(classes)):
+                if y[row] == classes[classe]:
+                    pass
+
+
+
+                    
     
     return 0
 

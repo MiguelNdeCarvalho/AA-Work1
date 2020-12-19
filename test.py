@@ -50,6 +50,8 @@ def countValuePOrN(attribute, attributeList, value, xdata, ydata): # Get numbers
                 countN += 1
     return countP,countN
 
+
+
 values= getValues(xdata, attributeList, "outlook")
 valuePOrN = countValuePOrN("outlook", attributeList, "sunny", xdata, ydata)
 print(valuePOrN)
