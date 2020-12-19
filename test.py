@@ -42,8 +42,9 @@ def getValues(data, attributeList, attribute):
 
 def countValuePOrN(attribute, attributeList, value, xdata, ydata): # Get numbers of Positive and Negatives in a value
     countP, countN = 0,0
+    attributePos = numpy.where(attributeList == attribute)
     for x,y in zip(xdata,ydata):
-        if x[0] == value:
+        if x[attributePos[1][0]] == value:
             if y == "yes":
                 countP += 1
             elif y == "no":
@@ -53,5 +54,5 @@ def countValuePOrN(attribute, attributeList, value, xdata, ydata): # Get numbers
 
 
 values= getValues(xdata, attributeList, "outlook")
-valuePOrN = countValuePOrN("outlook", attributeList, "sunny", xdata, ydata)
+valuePOrN = countValuePOrN("windy", attributeList, "TRUE", xdata, ydata)
 print(valuePOrN)
