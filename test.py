@@ -13,11 +13,10 @@ def count_p_n_global(data):
             n +=1
     return p,n
 
-data=numpy.genfromtxt("dados/vote.csv", delimiter=",", dtype=None, encoding=None)
+data=numpy.genfromtxt("dados/weather.nominal.csv", delimiter=",", dtype=None, encoding=None)
 xdata=data[1:,0:-1]
 ydata=data[1:,-1]
-attributeList=data[:1]
-
+attributeList=data[:1,:-1]
 # 1º Calcular entropia global: entropy(p,n) p = numeros de sim n = numeros de nao
 
 def entropyGlobalCount(ydata):
@@ -56,19 +55,31 @@ def getValues(data, attributeList, attribute):
             values.append(value[attributePos[1][0]]) 
     return values
 
-def countValuePOrN(attribute, attributeList, value, xdata, ydata): # Get numbers of Positive and Negatives in a value
-    countP, countN = 0,0
+def entropyAttributesCount(attribute, attributeList, value, xdata, ydata):
+    possible = []
+    aux = []
     attributePos = numpy.where(attributeList == attribute)
     for x,y in zip(xdata,ydata):
-        if x[attributePos[1][0]] == value:
-            if y == "yes":
-                countP += 1
-            elif y == "no":
-                countN += 1
-    return countP,countN
+        if x[attributePos[1][0]] == value and y not in possible:
+            possible.append(y)
+            aux.append(0)
+    for x,y in zip(xdata,ydata):
+        count = 0
+        for i in possible:
+            if x[attributePos[1][0]] == value and y == i:
+                aux[count] +=1
+            count +=1
+    return aux
 
+def entropyAttributes(attributeList, xdata, ydata):
+    for attribute in attributeList[0]:
+        values = getValues(xdata,attributeList, attribute)
+        for value in values:
+            entropyValues = entropyAttributesCount(attribute, attributeList, value, xdata, ydata)
+            entropy = entropyCalc(entropyValues)
+            print(F"Entropy: {entropy}, Attribute: {attribute}, Value: {value}, values: {entropyValues}")
 
+entropyAttributes(attributeList, xdata, ydata)
 
-# values= getValues(xdata, attributeList, "outlook")
 # valuePOrN = countValuePOrN("windy", attributeList, "TRUE", xdata, ydata)
 # print(values)
