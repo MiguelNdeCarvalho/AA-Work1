@@ -1,30 +1,6 @@
 import math
 import numpy
 
-def entropy(p,n):
-    return (-p/(p+n)) * math.log2(p/(p+n)) - (n/(p+n)) * math.log2(n/(p+n))
-
-# def entropy_value(p_atribute,n_atribute,p,n):
-    # return ((p_atribute+n_atribute) / (p + n)) * entropy(p_atribute,n_atribute)
-
-#def entropy_class(class, value):
-    #encontrar quantos sim e não
-
-def entropy_global(ydata):
-    possible = []
-    aux = []
-    for data in ydata:
-        if data not in possible:
-            possible.append(data)
-            aux.append(0)
-    for data in ydata:
-        count = 0
-        for value in possible:
-            if data == value:
-                aux[count] +=1
-            count +=1
-    print(aux)
-
 
 # 2º Calcular entropy para cada value de cada atributo. Ex: Sunny, Rainny, Overcast do Outlook
 
@@ -37,13 +13,38 @@ def count_p_n_global(data):
             n +=1
     return p,n
 
-data=numpy.genfromtxt("dados/contact-lenses.csv", delimiter=",", dtype=None, encoding=None)
+data=numpy.genfromtxt("dados/vote.csv", delimiter=",", dtype=None, encoding=None)
 xdata=data[1:,0:-1]
 ydata=data[1:,-1]
 attributeList=data[:1]
 
 # 1º Calcular entropia global: entropy(p,n) p = numeros de sim n = numeros de nao
-entropy_global(ydata)
+
+def entropyGlobalCount(ydata):
+    possible = []
+    aux = []
+    for data in ydata:
+        if data not in possible:
+            possible.append(data)
+            aux.append(0)
+    for data in ydata:
+        count = 0
+        for value in possible:
+            if data == value:
+                aux[count] +=1
+            count +=1
+    return aux
+
+def entropyCalc(array):
+    total, result = 0,0
+    for pos in array:
+        total += pos
+    for pos in array:
+        result -= (pos/total * math.log2(pos/total))
+    return result
+
+entropyGlobalValues = entropyGlobalCount(ydata)
+entropyGlobal=entropyCalc(entropyGlobalValues)
 
 # 2º Calcular entropy para cada value de cada atributo. Ex: Sunny, Rainny, Overcast do Outlook
 
