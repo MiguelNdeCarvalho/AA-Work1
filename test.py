@@ -40,4 +40,16 @@ def getValues(data, attributeList, attribute):
             values.append(value[attributePos[1][0]]) 
     return values
 
-print(getValues(xdata,attributeList, "outlook"))
+def countValuePOrN(attribute, attributeList, value, xdata, ydata): # Get numbers of Positive and Negatives in a value
+    countP, countN = 0,0
+    for x,y in zip(xdata,ydata):
+        if x[0] == value:
+            if y == "yes":
+                countP += 1
+            elif y == "no":
+                countN += 1
+    return countP,countN
+
+values= getValues(xdata, attributeList, "outlook")
+valuePOrN = countValuePOrN("outlook", attributeList, "sunny", xdata, ydata)
+print(valuePOrN)
