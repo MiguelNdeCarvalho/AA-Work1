@@ -59,15 +59,17 @@ def entropyAttributesCount(attribute, attributeList, value, xdata, ydata):
             count +=1
     return aux
 
-def entropyAttributes(attributeList, xdata, ydata):
-    for attribute in attributeList[0]:
-        values = getValues(xdata,attributeList, attribute)
-        for value in values:
-            entropyValues = entropyAttributesCount(attribute, attributeList, value, xdata, ydata)
-            entropy = entropyCalc(entropyValues)
-            print(F"Entropy: {entropy}, Attribute: {attribute}, Value: {value}, values: {entropyValues}")
+def calculateGain(attribute, attributeList, xdata, ydata, entropyGlobalValues ,entropyGlobal):
+    values = getValues(xdata,attributeList, attribute)
+    total = 0
+    for value in values:
+        entropyValues = entropyAttributesCount(attribute, attributeList, value, xdata, ydata)
+        entropy = entropyCalc(entropyValues)
+        total += (sum(entropyValues) / sum(entropyGlobalValues)) * entropy    
+    gain = entropyGlobal - total
+    print(gain)
 
-entropyAttributes(attributeList, xdata, ydata)
+calculateGain("windy", attributeList, xdata, ydata, entropyGlobalValues, entropyGlobal)
 
 # valuePOrN = countValuePOrN("windy", attributeList, "TRUE", xdata, ydata)
 # print(values)
