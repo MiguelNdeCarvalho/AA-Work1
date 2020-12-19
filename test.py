@@ -32,18 +32,12 @@ globalEntropy = entropy(p,n)
 
 # 2º Calcular entropy para cada value de cada atributo. Ex: Sunny, Rainny, Overcast do Outlook
 
-def getValuePosition(attributeList, attribute):
-    count = 0
-    for attributes in attributeList:
-        if attributes == attribute:
-            return count
-        count+=1
-
 def getValues(data, attributeList, attribute):
     values = []
     attributePos = numpy.where(attributeList == attribute)
     for value in data:
-       values.append(value[attributePos[1][0]]) 
+        if value[attributePos[1][0]] not in values:
+            values.append(value[attributePos[1][0]]) 
     return values
 
 print(getValues(xdata,attributeList, "outlook"))
