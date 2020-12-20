@@ -77,8 +77,7 @@ def chooseNode(attributeList):
     return attributeList[0][index]
 
 rootNode = chooseNode(attributeList)
-
-# 3º Passo, ver se chegamos a um leaf(folha) ou se ainda precisamos de aprofundar mais
+# 3º Passo, ver se chegamos a um leaf(folha) e retirar
 
 def isLeaf(attribute, attributeList, value, xdata, ydata): #checks if that value only has the same value
     attributePos = numpy.where(attributeList == attribute)
@@ -100,10 +99,13 @@ def checkLeaf(rootNode):
 
 attributesWithoutLeafs = checkLeaf(rootNode)
 
-# 4 Calcular o resto depois de tirar os leafs
+# 4º Passos Calcular a entropia Global
 
-for attribute in attributesWithoutLeafs:
-    print(attribute)
-    count = entropyAttributesCount(rootNode, attributeList, attribute, xdata, ydata)
-    entropy = entropyCalc(count)
-    print(entropy)
+def globalEntropyNextRun(attributesWithoutLeafs):
+    aux=[]
+    for attribute in attributesWithoutLeafs:
+        count = entropyAttributesCount(rootNode, attributeList, attribute, xdata, ydata)
+        aux.append(entropyCalc(count))
+    return aux
+
+globalEntropyNextRun(attributesWithoutLeafs)
