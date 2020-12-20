@@ -142,7 +142,7 @@ valuesWithoutLeafs = checkLeaf(rootNode)
 
 def entropyRootValues(rootNode, attributeList, valuesWithoutLeafs, xdata, ydata):
     '''
-    Função que devolve a entropia de cada 
+    Função que devolve a entropia de cada value do Atributo Principal (RootNode)
     '''
     aux=[]
     for attribute in valuesWithoutLeafs:
