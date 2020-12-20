@@ -90,5 +90,14 @@ def isLeaf(attribute, attributeList, value, xdata, ydata): #checks if that value
         return True
     return False
 
-print(isLeaf(rootNode, attributeList, "sunny", xdata, ydata))
+def checkLeaf(rootNode):
+    aux=[]
+    values = getValues(xdata, rootNode, attributeList)
+    for value in values:
+        if not isLeaf(rootNode, attributeList, value, xdata, ydata):
+            aux.append(value)
+    return aux
 
+attributesWithoutLeafs = checkLeaf(rootNode)
+
+# 4 Calcular o resto depois de tirar os leafs
