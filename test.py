@@ -101,3 +101,9 @@ def checkLeaf(rootNode):
 attributesWithoutLeafs = checkLeaf(rootNode)
 
 # 4 Calcular o resto depois de tirar os leafs
+
+for attribute in attributesWithoutLeafs:
+    print(attribute)
+    count = entropyAttributesCount(rootNode, attributeList, attribute, xdata, ydata)
+    entropy = entropyCalc(count)
+    print(entropy)
