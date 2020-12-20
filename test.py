@@ -76,7 +76,19 @@ def chooseNode(attributeList):
     index = aux.index(max(aux))
     return attributeList[0][index]
 
-print(chooseNode(attributeList))
+rootNode = chooseNode(attributeList)
 
-# valuePOrN = countValuePOrN("windy", attributeList, "TRUE", xdata, ydata)
-# print(values)
+# 3º Passo, ver se chegamos a um leaf(folha) ou se ainda precisamos de aprofundar mais
+
+def isLeaf(attribute, attributeList, value, xdata, ydata): #checks if that value only has the same value
+    attributePos = numpy.where(attributeList == attribute)
+    aux = []
+    for x,y in zip(xdata, ydata):
+        if x[attributePos[1][0]] == value and y not in aux:
+            aux.append(y)
+    if len(aux) == 1:
+        return True
+    return False
+
+print(isLeaf(rootNode, attributeList, "sunny", xdata, ydata))
+
