@@ -41,8 +41,8 @@ def entropyCalc(array):
         result -= (pos/total * math.log2(pos/total))
     return result
 
-entropyGlobalValues = entropyGlobalCount(ydata)
-entropyGlobal=entropyCalc(entropyGlobalValues)
+#entropyGlobalValues = entropyGlobalCount(ydata)
+#entropyGlobal=entropyCalc(entropyGlobalValues)
 
 # 2º Calcular entropy para cada value de cada atributo. Ex: Sunny, Rainny, Overcast do Outlook
 
@@ -106,7 +106,7 @@ def chooseNode(attributeList):
     index = aux.index(max(aux))
     return attributeList[0][index]
 
-rootNode = chooseNode(attributeList)
+#rootNode = chooseNode(attributeList)
 # 3º Passo, ver se chegamos a um leaf(folha) e retirar
 
 def isLeaf(attribute, attributeList, value, xdata, ydata): #checks if that value only has the same value
@@ -124,7 +124,7 @@ def isLeaf(attribute, attributeList, value, xdata, ydata): #checks if that value
         return True
     return False
 
-def checkLeaf(rootNode):
+def checkLeaf(rootNode,attribute, attributeList, value, xdata, ydata):
     '''
     Verifica se o atributo principal (rootNode) apresenta leafs.
     Retorna um array com os values sem os leafs
@@ -136,7 +136,7 @@ def checkLeaf(rootNode):
             aux.append(value)
     return aux
 
-valuesWithoutLeafs = checkLeaf(rootNode)
+#valuesWithoutLeafs = checkLeaf(rootNode)
 
 # 4º Passos Calcular a entropia Global
 
@@ -150,4 +150,9 @@ def entropyRootValues(rootNode, attributeList, valuesWithoutLeafs, xdata, ydata)
         aux.append(entropyCalc(count))
     return aux
 
+rootNode = chooseNode(attributeList)
 print(entropyRootValues(rootNode, attributeList, valuesWithoutLeafs, xdata, ydata))
+entropyGlobalValues = entropyGlobalCount(ydata)
+entropyGlobal=entropyCalc(entropyGlobalValues)
+valuesWithoutLeafs = checkLeaf(rootNode)
+
