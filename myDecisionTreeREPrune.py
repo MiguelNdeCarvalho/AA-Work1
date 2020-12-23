@@ -19,54 +19,66 @@ class myDecisionTreeREPrune:
     #metodos
     def fit(self,x,y,attributeList):
         
-        """
-        if homogeneous(y): 
-            print (True)
-            return tag(self,x,y)
-        """
-        #S = bestDivision(x,y,attributes,classes) 
-
-        entropyGlobalValues = entropyGlobalCount(y)
-        entropyGlobal=entropyCalc(entropyGlobalValues)
-
-        rootNode = chooseNode(attributeList,x,y,entropyGlobalValues, entropyGlobal)
-
-        self.root = Node()
-        self.root.set_Data(rootNode)
-
-        valuesLeafs,classeLeafs = checkLeaf(rootNode)
-
-        not_leafs,sons_order = valuesNotToLeafs(valuesLeafs,x,self.root.get_Data(),attributeList)
-
-        print(valuesLeafs,classeLeafs)
+        is_homegenus,homo_classe = homogeneous(y)
+        if is_homegenus: 
+            
+            self.root = makeLeaf(homo_classe)
         
-        setSons(self.root,sons_order,not_leafs,valuesLeafs,classeLeafs)
+        else:
+            
+            entropyGlobalValues = entropyGlobalCount(y)
+            entropyGlobal=entropyCalc(entropyGlobalValues)
 
-        print(self.root)
+            rootNode = chooseNode(attributeList,x,y,entropyGlobalValues, entropyGlobal)
 
-        PrintTree(self.root)
-                
-        """
-        divide D em subconjuntos Di de acordo com os literais em S;
-        foreach i do
-            if Di não vazio:
-                    Ti = CresceArvore(Di , F) 
-                else
-                    Ti é uma folha com etiqueta Etiqueta(D);
+            self.root = Node()
+            self.root.set_Data(rootNode)
+
+            valuesLeafs,classeLeafs = checkLeaf(rootNode)
+
+            not_leafs,sons_order = valuesNotToLeafs(valuesLeafs,x,self.root.get_Data(),attributeList)
+
+            print(valuesLeafs,classeLeafs)
+            
+            setSons(self.root,sons_order,not_leafs,valuesLeafs,classeLeafs)
+
+            print(self.root)
+
+            PrintTree(self.root)
+                    
+            """
+            divide D em subconjuntos Di de acordo com os literais em S;
+            foreach i do
+                if Di não vazio:
+                        Ti = CresceArvore(Di , F) 
+                    else
+                        Ti é uma folha com etiqueta Etiqueta(D);
+                    end
                 end
-            end
-        return uma árvore de raíz com etiqueta S e filhos T
-        """
+            return uma árvore de raíz com etiqueta S e filhos T
+            """
         
         return 0
 
     def score(self,x,y):
         
+        #for row in 
+        result = iterate_for(self,xdata[1,0:-1],ydata[1])
+        print(result)
         #percorrer a arvore com cada um dos exemplos (iterate_for)
         return 0
 
-    def iterate_for(self,objeto):
-        return 0 #class atribuida ao objeto
+def iterate_for(self,x_object,y_object):
+    
+    node_atual = self.root
+
+    while not node_atual.is_leaf():
+        break
+
+    if node_atual.get_Data() == y_object[0]:
+        return "hit"
+    
+    return "miss" #class atribuida ao objeto
 
     def prune(self):
         return 0
@@ -279,20 +291,9 @@ def homogeneous(y):     #folha instantanea
 
     for samples in range(len(y)):
         if ref_value != y[samples][0]:
-            return False
+            return False,""
 
-    return True  
-
-
-def bestDivision(x,y,attributes,classes):
-    
-
-
-
-    return 0 #root
-
-
-
+    return True,ref_value  
 
 if __name__ == '__main__':
 
@@ -308,8 +309,10 @@ if __name__ == '__main__':
     ydata=data[1:,-1]      # classe: da segunda à ultima linha, só última coluna
     attributeList=data[:1,:-1]
 
-    #x_train, x_test, y_train, y_test = train_test_split(xdata, ydata, random_state=0) #default test_size=25
+    x_train, x_test, y_train, y_test = train_test_split(xdata, ydata, random_state=0) #default test_size=25
 
     tree = myDecisionTreeREPrune()
-    tree.fit(xdata,ydata,attributeList)
-    #a = Node()
+    tree.fit(x_train,y_train,attributeList)
+    print(attributeList)
+    tree.score(x_test,y_test)
+
