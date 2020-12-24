@@ -62,11 +62,19 @@ class myDecisionTreeREPrune:
 
     def score(self,x,y):
         
-        #for row in 
-        result = iterate_for(self,xdata[1,0:-1],ydata[1])
-        print(result)
-        #percorrer a arvore com cada um dos exemplos (iterate_for)
-        return 0
+        total = len(x)
+        count_hit = 0
+        #count_miss = 
+
+        for row in range(len(x)): 
+            result = iterate_for(self,xdata[row,0:-1],ydata[row])
+            print(xdata[row,0:-1],ydata[row])
+            print(result)
+            if result == "hit":
+                count_hit+=1
+
+        print(count_hit,total)
+        return count_hit/total *100
 
 def iterate_for(self,x_object,y_object):
     
@@ -314,5 +322,5 @@ if __name__ == '__main__':
     tree = myDecisionTreeREPrune()
     tree.fit(x_train,y_train,attributeList)
     print(attributeList)
-    tree.score(x_test,y_test)
+    print(tree.score(x_test,y_test))
 
