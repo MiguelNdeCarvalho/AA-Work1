@@ -26,8 +26,11 @@ class myDecisionTreeREPrune:
         
         else:
             
+
             entropyGlobalValues = entropyGlobalCount(y)
             entropyGlobal=entropyCalc(entropyGlobalValues)
+
+            print(attributeList)
 
             rootNode = chooseNode(attributeList,x,y,entropyGlobalValues, entropyGlobal)
 
@@ -35,16 +38,17 @@ class myDecisionTreeREPrune:
             self.root.set_Data(rootNode)
 
             valuesLeafs,classeLeafs = checkLeaf(rootNode)
-
             not_leafs,sons_order = valuesNotToLeafs(valuesLeafs,x,self.root.get_Data(),attributeList)
-
-            print(valuesLeafs,classeLeafs)
             
             setSons(self.root,sons_order,not_leafs,valuesLeafs,classeLeafs)
+            
+            attributeList = removeAttribute(attributeList,self.root.get_Data())
+            new_x,new_y = update_data(x,y,sons_order,valuesLeafs[0])
 
-            print(self.root)
+            grow_tree(self.root,new_x,new_y,attributeList)
 
             PrintTree(self.root)
+
                     
             """
             divide D em subconjuntos Di de acordo com os literais em S;
@@ -76,6 +80,54 @@ class myDecisionTreeREPrune:
         print(count_hit,total)
         return count_hit/total *100
 
+def update_data(x,y,attri,value):
+
+    new_x = []
+    new_y = []
+
+    for row in zip(x,y):
+        if row[0][0] == value:
+            new_x.append(list(row[0])) 
+            new_y.append(row[1])
+    return new_x, new_y
+
+def grow_tree(node,x,y,attributeList):
+    
+    if not node.is_leaf():
+
+        entropyGlobalValues = entropyGlobalCount(y)
+        entropyGlobal=entropyCalc(entropyGlobalValues)
+
+        #print(entropyGlobalValues,entropyGlobal)
+
+        new_branch = chooseNode(attributeList,x,y,entropyGlobalValues, entropyGlobal)
+
+        print(new_branch)
+
+        valuesLeafs,classeLeafs = checkLeaf(new_branch)
+
+        not_leafs,sons_order = valuesNotToLeafs(valuesLeafs,x,node.get_Data(),attributeList)
+        
+        setSons(node,sons_order,not_leafs,valuesLeafs,classeLeafs)
+
+        #PrintTree(self.root)
+
+        attributeList = removeAttribute(attributeList,node.get_Data())
+        for sons in range(len(node.sons)):
+            new_x,new_y = update_data(x,y,sons_order[sons])
+            grow_tree(node.sons[sons],new_x,new_y,attributeList)
+
+
+def removeAttribute(attributeList,attri):
+
+    aux = []
+
+    for row in attributeList:
+        for pos in row:
+            if pos not in aux and pos != attri:
+                aux.append(pos)
+    return [numpy.array(aux)]
+
 def iterate_for(self,x_object,y_object):
     
     node_atual = self.root
@@ -106,8 +158,6 @@ def PrintTree(node):
 
 def setSons(node,sons_order,valuesNotLeafs,valuesLeafs,classeLeafs):
     
-    print(node,sons_order,valuesNotLeafs,valuesLeafs,classeLeafs)
-
     for sons in range(len(sons_order)):
         
         if sons_order[sons] in valuesLeafs:
@@ -131,7 +181,6 @@ def makeLeaf(classe):
 
 
 def valuesNotToLeafs(valuesLeafs,x,atr,attributeList):
-    
     atribute_values = getValues(x,attributeList,atr)
 
     aux = [] 
@@ -211,14 +260,16 @@ def entropyCalc(array):
 # 2º Calcular entropy para cada value de cada atributo. Ex: Sunny, Rainny, Overcast do Outlook
 
 def getValues(data, attributeList, attribute):
+
     '''
     Função que retorna um array com os valores de um dado atributo
     '''
     values = []
     attributePos = numpy.where(attributeList == attribute)
+    print(f"Attribute: {attribute}, Lista: {attributeList}, Pos: {attributePos}")
     for value in data:
         if value[attributePos[1][0]] not in values:
-            values.append(value[attributePos[1][0]]) 
+            values.append(value[attributePos[1][0]])
     return values
 
 def entropyValueCount(attribute, attributeList, value, xdata, ydata):
@@ -238,7 +289,7 @@ def entropyValueCount(attribute, attributeList, value, xdata, ydata):
         count = 0
         for i in possible:
             if x[attributePos[1][0]] == value and y == i:
-                aux[count] +=1
+                aux[count]+=1
             count +=1
     return aux
 
@@ -317,10 +368,10 @@ if __name__ == '__main__':
     ydata=data[1:,-1]      # classe: da segunda à ultima linha, só última coluna
     attributeList=data[:1,:-1]
 
-    x_train, x_test, y_train, y_test = train_test_split(xdata, ydata, random_state=0) #default test_size=25
+    #x_train, x_test, y_train, y_test = train_test_split(xdata, ydata, random_state=0) #default test_size=25
 
     tree = myDecisionTreeREPrune()
-    tree.fit(x_train,y_train,attributeList)
-    print(attributeList)
-    print(tree.score(x_test,y_test))
+    tree.fit(xdata,ydata,attributeList)
+   #print(attributeList)
+   #print(tree.score(x_test,y_test))
 

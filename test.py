@@ -58,6 +58,7 @@ def getValues(data, attributeList, attribute):
     return values
 
 def entropyValueCount(attribute, attributeList, value, xdata, ydata):
+    
     '''
     Função que conta o número de classes correspondentes a um value de um atributo
     1º For - adiciona no array possible todas as classes possiveis
