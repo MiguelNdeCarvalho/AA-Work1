@@ -20,49 +20,74 @@ class myDecisionTreeREPrune:
     def fit(self,x,y,attributeList):
         
         is_homegenus,homo_classe = homogeneous(y)
-        if is_homegenus: 
-            
-            self.root = makeLeaf(homo_classe)
         
+        if is_homegenus: 
+            self.root = makeLeaf(homo_classe)
         else:
-            
-
             entropyGlobalValues = entropyGlobalCount(y)
             entropyGlobal=entropyCalc(entropyGlobalValues)
 
-            print(attributeList)
-
             rootNode = chooseNode(attributeList,x,y,entropyGlobalValues, entropyGlobal)
-
+            #print("Root:", rootNode)
             self.root = Node()
             self.root.set_Data(rootNode)
 
-            valuesLeafs,classeLeafs = checkLeaf(rootNode)
+            valuesLeafs,classeLeafs = checkLeaf(rootNode, attributeList, x, y)
+            #print(f"ValueLeafs: {valuesLeafs}, sons_order: {sons_order}")
             not_leafs,sons_order = valuesNotToLeafs(valuesLeafs,x,self.root.get_Data(),attributeList)
-            
+
             setSons(self.root,sons_order,not_leafs,valuesLeafs,classeLeafs)
-            
-            attributeList = removeAttribute(attributeList,self.root.get_Data())
+
             new_x,new_y = update_data(x,y,sons_order,valuesLeafs[0])
+            
 
-            grow_tree(self.root,new_x,new_y,attributeList)
+            # print(f"Root: {PrintTree(self.root)}\n, New_X: {new_x}, New_Y: {new_y}, attributeList: {attributeList}")
+            
+            #print(not_leafs,valuesLeafs)
 
-            PrintTree(self.root)
+            
+            for i in range(len(self.root.sons)):
+                new_x,new_y = update_data(x,y,self.root.sons[i],sons_order[i])
+                attributeList = removeAttribute(attributeList,self.root.get_Data())
+                #print(f"New_X: {new_x}, New_y: {new_y}, son: {sons_order[i]} ")
+                grow_tree(self.root.sons[i],new_x,new_y,attributeList)
 
-                    
-            """
-            divide D em subconjuntos Di de acordo com os literais em S;
-            foreach i do
-                if Di não vazio:
-                        Ti = CresceArvore(Di , F) 
-                    else
-                        Ti é uma folha com etiqueta Etiqueta(D);
-                    end
-                end
-            return uma árvore de raíz com etiqueta S e filhos T
-            """
+        PrintTree(self.root)
         
         return 0
+
+def grow_tree(node,x,y,attributeList):
+    #print("----------------------")
+    if node.get_Data()=="": #
+        
+        entropyGlobalValues = entropyGlobalCount(y)
+        entropyGlobal=entropyCalc(entropyGlobalValues)
+
+        #print(f"attributeList: {attributeList},x:{x},y:{y}, Values: {entropyGlobalValues}, Entropy: {entropyGlobal}")
+        new_branch = chooseNode(attributeList,x,y,entropyGlobalValues, entropyGlobal)
+        print(new_branch)
+
+        #print(f"Escolhe Node: {new_branch}, Y: {y}, Count: {entropyGlobalValues} , EntropyGlobal: {entropyGlobal}")
+        valuesLeafs,classeLeafs = checkLeaf(new_branch, attributeList, x,y)
+
+        #print("valuesLeafs:",valuesLeafs,"classeLeafs:",classeLeafs)
+
+
+        node.root = Node()
+        node.set_Data(new_branch)
+
+        not_leafs,sons_order = valuesNotToLeafs(valuesLeafs,x,node.get_Data(),attributeList)
+                
+        # print("not_Leafs:",not_leafs,"sons_order:",sons_order)
+
+        setSons(node,sons_order,not_leafs,valuesLeafs,classeLeafs)
+
+        for i in range(len(node.sons)):
+            #print(node.sons[i],sons_order[i])
+            new_x,new_y = update_data(x,y,node.sons[i],sons_order[i])
+            #print(f"grow_x: {new_x},grow_x: {new_y}")
+            grow_tree(node.sons[i],new_x,new_y,attributeList)
+
 
     def score(self,x,y):
         
@@ -85,37 +110,21 @@ def update_data(x,y,attri,value):
     new_x = []
     new_y = []
 
+    if len(value) == 0:
+        return
+
+    #print(f"Attrib: {attri}, Value: {value}  ")
     for row in zip(x,y):
-        if row[0][0] == value:
-            new_x.append(list(row[0])) 
-            new_y.append(row[1])
+        for i in row[0]:
+            if i == value:
+                #print(f"I: {i}, Linha: {row[0]}")
+                new_x.append(list(row[0])) 
+                new_y.append(row[1])
+    for row in new_x:
+        row.remove(value)
+
     return new_x, new_y
 
-def grow_tree(node,x,y,attributeList):
-    
-    if not node.is_leaf():
-
-        entropyGlobalValues = entropyGlobalCount(y)
-        entropyGlobal=entropyCalc(entropyGlobalValues)
-
-        #print(entropyGlobalValues,entropyGlobal)
-
-        new_branch = chooseNode(attributeList,x,y,entropyGlobalValues, entropyGlobal)
-
-        print(new_branch)
-
-        valuesLeafs,classeLeafs = checkLeaf(new_branch)
-
-        not_leafs,sons_order = valuesNotToLeafs(valuesLeafs,x,node.get_Data(),attributeList)
-        
-        setSons(node,sons_order,not_leafs,valuesLeafs,classeLeafs)
-
-        #PrintTree(self.root)
-
-        attributeList = removeAttribute(attributeList,node.get_Data())
-        for sons in range(len(node.sons)):
-            new_x,new_y = update_data(x,y,sons_order[sons])
-            grow_tree(node.sons[sons],new_x,new_y,attributeList)
 
 
 def removeAttribute(attributeList,attri):
@@ -126,13 +135,16 @@ def removeAttribute(attributeList,attri):
         for pos in row:
             if pos not in aux and pos != attri:
                 aux.append(pos)
-    return [numpy.array(aux)]
+    return numpy.array([aux])
 
 def iterate_for(self,x_object,y_object):
     
     node_atual = self.root
 
     while not node_atual.is_leaf():
+        
+        getValues(data, attributeList, node_atual.get_Data())
+        
         break
 
     if node_atual.get_Data() == y_object[0]:
@@ -206,14 +218,14 @@ def isLeaf(attribute, attributeList, value, xdata, ydata): #checks if that value
         return True,aux[0]
     return False,[]
 
-def checkLeaf(rootNode):
+def checkLeaf(rootNode, attributeList, xdata, ydata):
     '''
     Verifica se o atributo principal (rootNode) apresenta leafs.
     Retorna um array com os values sem os leafs
     '''
     aux=[]
     aux_class = []
-    values = getValues(xdata, rootNode, attributeList)
+    values = getValues(xdata, attributeList, rootNode)
     for value in values:
         condition,classe = isLeaf(rootNode, attributeList, value, xdata, ydata)
         if condition:
@@ -266,8 +278,14 @@ def getValues(data, attributeList, attribute):
     '''
     values = []
     attributePos = numpy.where(attributeList == attribute)
-    print(f"Attribute: {attribute}, Lista: {attributeList}, Pos: {attributePos}")
+    """
+    if(attribute == ""):
+        print("Nada!")
+        return 0
+    #print(f"Attribute: {attribute}, Lista: {attributeList}, Pos: {attributePos[1][0]}")
+    """
     for value in data:
+        #print(value[attributePos[1][0]])
         if value[attributePos[1][0]] not in values:
             values.append(value[attributePos[1][0]])
     return values
@@ -302,6 +320,7 @@ def calculateGain(attribute, attributeList, xdata, ydata, entropyGlobalValues ,e
     retorna o ganho de uma class
     '''
     values = getValues(xdata,attributeList, attribute)
+    #print(f"Attribute: {attribute} Values: {values}")
     total = 0
     for value in values:
         entropyValues = entropyValueCount(attribute, attributeList, value, xdata, ydata)
@@ -317,8 +336,10 @@ def chooseNode(attributeList,xdata, ydata,entropyGlobalValues, entropyGlobal):
     '''
     aux = []
     for attribute in attributeList[0]:
+        #print(f"Attribute: {attribute},Gain: {calculateGain(attribute, attributeList, xdata, ydata, entropyGlobalValues, entropyGlobal)}")
         aux.append(calculateGain(attribute, attributeList, xdata, ydata, entropyGlobalValues, entropyGlobal))
     index = aux.index(max(aux))
+    #print(f"Escolheu Root: {attributeList[0][index]}")
     return attributeList[0][index]
 
 #rootNode = chooseNode(attributeList)
@@ -372,6 +393,6 @@ if __name__ == '__main__':
 
     tree = myDecisionTreeREPrune()
     tree.fit(xdata,ydata,attributeList)
-   #print(attributeList)
-   #print(tree.score(x_test,y_test))
+    #print(attributeList)
+    #print(tree.score(xdata,ydata))
 
