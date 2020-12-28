@@ -28,22 +28,25 @@ class myDecisionTreeREPrune:
             entropyGlobal=entropyCalc(entropyGlobalValues)
 
             rootNode = chooseNode(attributeList,x,y,entropyGlobalValues, entropyGlobal)
-            #print("Root:", rootNode)
+            print("Root:", rootNode)
             self.root = Node()
             self.root.set_Data(rootNode)
 
             valuesLeafs,classeLeafs = checkLeaf(rootNode, attributeList, x, y)
-            #print(f"ValueLeafs: {valuesLeafs}, sons_order: {sons_order}")
             not_leafs,sons_order = valuesNotToLeafs(valuesLeafs,x,self.root.get_Data(),attributeList)
+            print(f"ValueLeafs: {valuesLeafs}, classeLeafs: {classeLeafs}")
 
             setSons(self.root,sons_order,not_leafs,valuesLeafs,classeLeafs)
 
-            new_x,new_y = update_data(x,y,sons_order,valuesLeafs[0])
+            #↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+            if valuesLeafs != []:
+                new_x,new_y = update_data(x,y,sons_order,valuesLeafs[0])
             
+            #↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
-            # print(f"Root: {PrintTree(self.root)}\n, New_X: {new_x}, New_Y: {new_y}, attributeList: {attributeList}")
+            #print(f"New_X: {new_x}, New_Y: {new_y}, attributeList: {attributeList}")
             
-            #print(not_leafs,valuesLeafs)
+            print(f"not_leafs: {not_leafs}, sons_order: {sons_order}")
 
             
             for i in range(len(self.root.sons)):
@@ -52,25 +55,25 @@ class myDecisionTreeREPrune:
                 #print(f"New_X: {new_x}, New_y: {new_y}, son: {sons_order[i]} ")
                 grow_tree(self.root.sons[i],new_x,new_y,attributeList)
 
-        PrintTree(self.root)
+        #PrintTree(self.root)
         
         return 0
 
 def grow_tree(node,x,y,attributeList):
-    #print("----------------------")
+    print("----------------------")
     if node.get_Data()=="": #
         
         entropyGlobalValues = entropyGlobalCount(y)
         entropyGlobal=entropyCalc(entropyGlobalValues)
 
-        #print(f"attributeList: {attributeList},x:{x},y:{y}, Values: {entropyGlobalValues}, Entropy: {entropyGlobal}")
+        print(f"attributeList: {attributeList},x:{x},y:{y}, Values: {entropyGlobalValues}, Entropy: {entropyGlobal}")
         new_branch = chooseNode(attributeList,x,y,entropyGlobalValues, entropyGlobal)
         print(new_branch)
 
-        #print(f"Escolhe Node: {new_branch}, Y: {y}, Count: {entropyGlobalValues} , EntropyGlobal: {entropyGlobal}")
+        print(f"Escolhe Node: {new_branch}, Y: {y}, Count: {entropyGlobalValues} , EntropyGlobal: {entropyGlobal}")
         valuesLeafs,classeLeafs = checkLeaf(new_branch, attributeList, x,y)
 
-        #print("valuesLeafs:",valuesLeafs,"classeLeafs:",classeLeafs)
+        print("valuesLeafs:",valuesLeafs,"classeLeafs:",classeLeafs)
 
 
         node.root = Node()
@@ -78,12 +81,12 @@ def grow_tree(node,x,y,attributeList):
 
         not_leafs,sons_order = valuesNotToLeafs(valuesLeafs,x,node.get_Data(),attributeList)
                 
-        # print("not_Leafs:",not_leafs,"sons_order:",sons_order)
+        print("not_Leafs:",not_leafs,"sons_order:",sons_order)
 
         setSons(node,sons_order,not_leafs,valuesLeafs,classeLeafs)
 
         for i in range(len(node.sons)):
-            #print(node.sons[i],sons_order[i])
+            print(node.sons[i],sons_order[i])
             new_x,new_y = update_data(x,y,node.sons[i],sons_order[i])
             #print(f"grow_x: {new_x},grow_x: {new_y}")
             grow_tree(node.sons[i],new_x,new_y,attributeList)
@@ -160,9 +163,9 @@ def PrintTree(node):
     if node == None:
         pass
     
-    if node.is_leaf():
-        print(node.get_Data())
-    else:
+    print(node.get_Data())
+
+    if not node.is_leaf():
         for sons in range(len(node.sons)):
             PrintTree(node.sons[sons])
         
@@ -277,15 +280,17 @@ def getValues(data, attributeList, attribute):
     Função que retorna um array com os valores de um dado atributo
     '''
     values = []
+    #print(f"attributeList: {attributeList}, attribute: {attribute}")
     attributePos = numpy.where(attributeList == attribute)
     """
     if(attribute == ""):
         print("Nada!")
         return 0
-    #print(f"Attribute: {attribute}, Lista: {attributeList}, Pos: {attributePos[1][0]}")
+    
     """
+    #print(f"Attribute: {attribute}, Lista: {attributeList}, Pos: {attributePos[1][0]}\n Tamanho do Data: {len(data[0])}, Tamanho da AttributeList: {len(attributeList[0])}")
     for value in data:
-        #print(value[attributePos[1][0]])
+        #print(f"Value: {value} Pos: {attributePos[1][0]}")
         if value[attributePos[1][0]] not in values:
             values.append(value[attributePos[1][0]])
     return values
