@@ -3,6 +3,7 @@ class Node:
     def __init__(self):
 
         self.sons = []
+        self.sons_order = []
         self.data = ""
 
     def __str__(self):
@@ -21,25 +22,18 @@ class Node:
     def get_Data(self):
         return self.data
     
+    def set_Sons(self,data):
+        self.sons_order = data
+    
+    def get_Sons(self):
+        return self.sons_order
+
     def printData(self):
         print(self.data)
 
     def printSons(self):
         print(self.sons)
 
-    def set_Data(self,data):
-        self.data = data
-    
-    def get_Data(self):
-        return self.data
-    
-    
-    def add_son(self,node):
-        self.sons.append(node)
-
-    def remove_son(self,node):
-        
-        self.sons.remove(node)
     
     
 if __name__ == '__main__':

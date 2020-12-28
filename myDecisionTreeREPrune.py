@@ -37,6 +37,7 @@ class myDecisionTreeREPrune:
             print(f"ValueLeafs: {valuesLeafs}, classeLeafs: {classeLeafs}")
 
             setSons(self.root,sons_order,not_leafs,valuesLeafs,classeLeafs)
+            self.root.set_Sons(sons_order)
 
             #↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
             if valuesLeafs != []:
@@ -59,6 +60,67 @@ class myDecisionTreeREPrune:
         
         return 0
 
+
+
+    def score(self,x,y,attributeList):
+        
+        total = len(x)
+        count_hit = 0
+        #count_miss = 
+
+        for row in range(len(x)): 
+            print("----------------")
+            result = iterate_for(self,xdata[row,0:],ydata[row],attributeList)
+            #print(xdata[row,0:],ydata[row])
+            #print(result)
+            if result == "hit":
+                count_hit+=1
+
+        #print(count_hit,total)
+        return count_hit/total *100
+        
+def iterate_for(self,x_object,y_object,attributeList):
+    
+    node_atual = self.root
+    print(attributeList)
+
+    while not node_atual.is_leaf():
+        
+        node_data = node_atual.get_Data()
+        node_sons = node_atual.get_Sons()
+
+        print(node_atual.get_Data())
+        print(node_atual.get_Sons())
+
+        for i in range(len(attributeList[0])):
+            print(attributeList[0][i] == node_data)
+            if attributeList[0][i] == node_data:
+                break
+        
+        print(i)
+        print(x_object[i])
+
+        for x in range(len(node_atual.get_Sons())):
+            if x_object[i] == node_sons[x]:
+                break
+
+        node_atual = node_atual.sons[x]
+
+    print(f"folha: {node_atual.get_Data()}, must_be: {y_object}")            
+    if node_atual.get_Data() == y_object:
+        return "hit"
+    
+    return "miss" #class atribuida ao objeto
+
+    """
+    def prune(self):
+        
+        self
+        iter_order = 
+        
+        return 0
+"""
+
 def grow_tree(node,x,y,attributeList):
     print("----------------------")
     if node.get_Data()=="": #
@@ -80,7 +142,9 @@ def grow_tree(node,x,y,attributeList):
         node.set_Data(new_branch)
 
         not_leafs,sons_order = valuesNotToLeafs(valuesLeafs,x,node.get_Data(),attributeList)
-                
+        node.set_Sons(sons_order)
+        print(f"Node_Sons: {node.get_Sons()}")
+
         print("not_Leafs:",not_leafs,"sons_order:",sons_order)
 
         setSons(node,sons_order,not_leafs,valuesLeafs,classeLeafs)
@@ -91,22 +155,6 @@ def grow_tree(node,x,y,attributeList):
             #print(f"grow_x: {new_x},grow_x: {new_y}")
             grow_tree(node.sons[i],new_x,new_y,attributeList)
 
-
-    def score(self,x,y):
-        
-        total = len(x)
-        count_hit = 0
-        #count_miss = 
-
-        for row in range(len(x)): 
-            result = iterate_for(self,xdata[row,0:-1],ydata[row])
-            print(xdata[row,0:-1],ydata[row])
-            print(result)
-            if result == "hit":
-                count_hit+=1
-
-        print(count_hit,total)
-        return count_hit/total *100
 
 def update_data(x,y,attri,value):
 
@@ -140,23 +188,6 @@ def removeAttribute(attributeList,attri):
                 aux.append(pos)
     return numpy.array([aux])
 
-def iterate_for(self,x_object,y_object):
-    
-    node_atual = self.root
-
-    while not node_atual.is_leaf():
-        
-        getValues(data, attributeList, node_atual.get_Data())
-        
-        break
-
-    if node_atual.get_Data() == y_object[0]:
-        return "hit"
-    
-    return "miss" #class atribuida ao objeto
-
-    def prune(self):
-        return 0
 
 def PrintTree(node):
     
@@ -394,10 +425,12 @@ if __name__ == '__main__':
     ydata=data[1:,-1]      # classe: da segunda à ultima linha, só última coluna
     attributeList=data[:1,:-1]
 
-    #x_train, x_test, y_train, y_test = train_test_split(xdata, ydata, random_state=0) #default test_size=25
+    x_train, x_test, y_train, y_test = train_test_split(xdata, ydata, random_state=0) #default test_size=25
 
     tree = myDecisionTreeREPrune()
     tree.fit(xdata,ydata,attributeList)
     #print(attributeList)
-    #print(tree.score(xdata,ydata))
+    #PrintTree(tree.root)
+    print(x_test)
+    print(tree.score(x_test, y_test,attributeList))
 
