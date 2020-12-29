@@ -29,7 +29,7 @@ class myDecisionTreeREPrune:
             entropyGlobalValues = entropyGlobalCount(y)
             entropyGlobal=entropyCalc(entropyGlobalValues)
 
-            rootNode = chooseNode(attributeList,x,y,entropyGlobalValues, entropyGlobal) #argument
+            rootNode = chooseNode(self.criterion, attributeList,x,y,entropyGlobalValues, entropyGlobal) #argument
             #print("Root:", rootNode)
             self.root = Node()
             self.root.set_Data(rootNode)
@@ -58,7 +58,7 @@ class myDecisionTreeREPrune:
                 newAttributeList = removeAttribute(attributeList,self.root.get_Data())
                 new_x,new_y = update_data(x,y,self.root.sons[i],sons_order[i])
                 #print(f"New_X: {new_x}, New_y: {new_y}, son: {sons_order[i]} ")
-                grow_tree(self.root.sons[i],new_x,new_y,newAttributeList)
+                grow_tree(self,self.root.sons[i],new_x,new_y,newAttributeList)
                 # print(f"new: {newAttributeList}, velho: {attributeList}")
                 # newAttributeList=attributeList
 
@@ -127,7 +127,7 @@ def iterate_for(self,x_object,y_object,attributeList):
         return 0
 """
 
-def grow_tree(node,x,y,attributeList):
+def grow_tree(self,node,x,y,attributeList):
     print("----------------------")
     if node.get_Data()=="": #
         
@@ -135,7 +135,7 @@ def grow_tree(node,x,y,attributeList):
         entropyGlobal=entropyCalc(entropyGlobalValues)
 
         #print(f"attributeList: {attributeList},x:{x},y:{y}, Values: {entropyGlobalValues}, Entropy: {entropyGlobal}")
-        new_branch = chooseNode(attributeList,x,y,entropyGlobalValues, entropyGlobal) #argument
+        new_branch = chooseNode(self.criterion, attributeList,x,y,entropyGlobalValues, entropyGlobal) #argument
         print(new_branch)
 
 
@@ -167,7 +167,7 @@ def grow_tree(node,x,y,attributeList):
             
             #print(new_x,new_y)
             #print(f"Velha: {attributeList}, Nova(filhos): {sonsAttributeList}")
-            grow_tree(node.sons[i],new_x,new_y,sonsAttributeList)
+            grow_tree(self, node.sons[i],new_x,new_y,sonsAttributeList)
 
 
 
@@ -396,18 +396,22 @@ def calculateGain(attribute, attributeList, xdata, ydata, entropyGlobalValues ,e
     gain = entropyGlobal - total
     return gain
 
-def chooseNode(attributeList,xdata, ydata,entropyGlobalValues, entropyGlobal):
+def chooseNode(criterion,attributeList,xdata, ydata,entropyGlobalValues, entropyGlobal):
     '''
     Função que recebe a lista de attributes e calcula o ganho de cada e retorna o attributo com maior ganho,
     o atributo principal
     '''
     aux = []
-    for attribute in attributeList[0]:
-        #print(f"Attribute: {attribute},Gain: {calculateGain(attribute, attributeList, xdata, ydata, entropyGlobalValues, entropyGlobal)}")
-        aux.append(calculateGain(attribute, attributeList, xdata, ydata, entropyGlobalValues, entropyGlobal))
-    index = aux.index(max(aux))
-    #print(f"Escolheu Root: {attributeList[0][index]}")
-    return attributeList[0][index]
+    if criterion == "entropy":
+        for attribute in attributeList[0]:
+            #print(f"Attribute: {attribute},Gain: {calculateGain(attribute, attributeList, xdata, ydata, entropyGlobalValues, entropyGlobal)}")
+            aux.append(calculateGain(attribute, attributeList, xdata, ydata, entropyGlobalValues, entropyGlobal))
+            index = aux.index(max(aux))
+        return attributeList[0][index]
+    if criterion == "gini":
+        pass
+    if criterion == "error":
+        pass
 
 #rootNode = chooseNode(attributeList)
 # 3º Passo, ver se chegamos a um leaf(folha) e retirar
