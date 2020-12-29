@@ -8,10 +8,11 @@ from Node import Node
 class myDecisionTreeREPrune: 
     
     #construtores
-    def __init__(self):
+    def __init__(self, criterion, prune):
         
-        self.criterion='gini'
-        self.prune=True
+        self.criterion=criterion
+        self.prune=prune
+        print(f"Chosen criterion: {self.criterion} wiith prune: {self.prune}")
 
         self.sample_size = 0
         self.root = Node()
@@ -445,8 +446,8 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()        
     parser.add_argument('-f', "-file", action='store', dest='file_location', help='Path to the file that contains the data', required=True)
-    parser.add_argument('-c', '-criterion', action='store', dest='criterion', help='Choose criterion, it can be Gini or Entropy. By default: Gini', default='gini')
-    parser.add_argument('-p', '-prune', action='store_false', dest='prune', help='Set prune. By default: False', default=False)              
+    parser.add_argument('-c', '-criterion', action='store', dest='criterion', help='Choose criterion, it can be entropy, gini or error. By default: Entropy', default='entropy')
+    parser.add_argument('-p', '-prune', action='store_true', dest='prune', help='Set prune. By default: False', default=False)
     results = parser.parse_args()
 
 
@@ -457,7 +458,7 @@ if __name__ == '__main__':
 
     #x_train, x_test, y_train, y_test = train_test_split(xdata, ydata, random_state=0) #default test_size=25
 
-    tree = myDecisionTreeREPrune()
+    tree = myDecisionTreeREPrune(criterion=results.criterion, prune=results.prune)
     tree.fit(xdata,ydata,attributeList)
     #print(attributeList)
     #PrintTree(tree.root)
