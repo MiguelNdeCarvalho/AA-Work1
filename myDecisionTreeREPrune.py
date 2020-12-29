@@ -13,8 +13,6 @@ class myDecisionTreeREPrune:
         self.criterion=criterion
         self.prune=prune
         print(f"Chosen criterion: {self.criterion} with prune: {self.prune}")
-
-        self.sample_size = 0
         self.root = Node()
 
     #metodos
