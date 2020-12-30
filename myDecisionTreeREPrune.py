@@ -182,7 +182,7 @@ def grow_tree(self,node,x,y,attributeList):
         print("----------------------")
         print(node,x,y,attributeList)
             
-        globalTotalValues = entropyGlobalCount(y)
+        globalTotalValues = globalTotalCount(y)
         globalTotal=entropyCalc(globalTotalValues)
 
         #print(f"attributeList: {attributeList},x:{x},y:{y}, Values: {globalTotalValues}, Entropy: {globalTotal}")
