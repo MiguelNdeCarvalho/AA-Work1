@@ -9,12 +9,11 @@ import time
 class myDecisionTreeREPrune: 
     
     #construtores
-    def __init__(self):
+    def __init__(self, criterion, prune):
         
-        self.criterion='gini'
-        self.prune=True
-
-        self.sample_size = 0
+        self.criterion=criterion
+        self.prune=prune
+        print(f"Chosen criterion: {self.criterion} with prune: {self.prune}")
         self.root = Node()
 
     #metodos
@@ -26,10 +25,16 @@ class myDecisionTreeREPrune:
         if is_homegenus: 
             self.root = makeLeaf(homo_classe)
         else:
-            entropyGlobalValues = entropyGlobalCount(y)
-            entropyGlobal=entropyCalc(entropyGlobalValues)
+            globalTotalValues = globalTotalCount(y)
 
-            rootNode = chooseNode(attributeList,x,y,entropyGlobalValues, entropyGlobal) #argument
+            if self.criterion == "entropy":
+                globalTotal = entropyCalc(globalTotalValues)
+            elif self.criterion == "gini":
+                globalTotal = giniCalc(globalTotalValues)
+            elif self.criterion == "error":
+                globalTotal = errorCalc(globalTotalValues)
+
+            rootNode = chooseNode(self.criterion, attributeList,x,y,globalTotalValues, globalTotal) #argument
             print("Root:", rootNode)
             self.root = Node()
             self.root.set_Data(rootNode)
@@ -57,19 +62,17 @@ class myDecisionTreeREPrune:
 
             
             for i in range(len(self.root.sons)):
-                
                 if self.root.sons[i].get_Data()=="":
                     attributeList,pos = removeAttribute(attributeList,rootNode)
                     x,y,save_rows,save_value = update_data(x,y,self.root.sons[i],sons_order[i]) #save_diferences
                     #print(f"New_X: {new_x}, New_y: {new_y}, son: {sons_order[i]} ")
                     
-                    grow_tree(self.root.sons[i],x,y,attributeList)
+                    grow_tree(self,self.root.sons[i],x,y,attributeList)
                     x,y = applySaves(x,y,save_rows,save_value,pos)
     
                     # print(f"new: {newAttributeList}, velho: {attributeList}")
                     # newAttributeList=attributeList
                     attributeList = appendAttribute(attributeList,rootNode,pos)
-
 
         #PrintTree(self.root)
         
@@ -164,7 +167,7 @@ def most_of(y):
 
     #for 
 
-def grow_tree(node,x,y,attributeList):
+def grow_tree(self,node,x,y,attributeList):
 
     #print("len(attributeList): ",len(attributeList[0]))
     if len(attributeList[0]) == 0:
@@ -179,15 +182,15 @@ def grow_tree(node,x,y,attributeList):
         print("----------------------")
         print(node,x,y,attributeList)
             
-        entropyGlobalValues = entropyGlobalCount(y)
-        entropyGlobal=entropyCalc(entropyGlobalValues)
+        globalTotalValues = entropyGlobalCount(y)
+        globalTotal=entropyCalc(globalTotalValues)
 
-        #print(f"attributeList: {attributeList},x:{x},y:{y}, Values: {entropyGlobalValues}, Entropy: {entropyGlobal}")
-        new_branch = chooseNode(attributeList,x,y,entropyGlobalValues, entropyGlobal) #argument
+        #print(f"attributeList: {attributeList},x:{x},y:{y}, Values: {globalTotalValues}, Entropy: {globalTotal}")
+        new_branch = chooseNode(self.criterion, attributeList,x,y,globalTotalValues, globalTotal) #argument
         print(new_branch)
 
 
-        #print(f"Escolhe Node: {new_branch}, Y: {y}, Count: {entropyGlobalValues} , EntropyGlobal: {entropyGlobal}")
+        #print(f"Escolhe Node: {new_branch}, Y: {y}, Count: {globalTotalValues} , EntropyGlobal: {globalTotal}")
         valuesLeafs,classeLeafs = checkLeaf(new_branch, attributeList, x,y)
 
         #print("valuesLeafs:",valuesLeafs,"classeLeafs:",classeLeafs)
@@ -213,7 +216,7 @@ def grow_tree(node,x,y,attributeList):
                 attributeList,pos = removeAttribute(attributeList,new_branch)
                 x,y, save_rows,save_value = update_data(x,y,node.sons[i],sons_order[i])
                             #print(f"Velha: {attributeList}, Nova(filhos): {sonsAttributeList}")
-                grow_tree(node.sons[i],x,y,attributeList)
+                grow_tree(self,node.sons[i],x,y,attributeList)
                 x,y = applySaves(x,y,save_rows,save_value,pos)
                 attributeList = appendAttribute(attributeList,new_branch,pos)
 
@@ -423,7 +426,7 @@ def checkLeaf(rootNode, attributeList, xdata, ydata):
             aux_class.append(classe)
     return aux,aux_class
 
-def entropyGlobalCount(ydata):
+def globalTotalCount(ydata):
     '''
     Esta função retorna num array quantas vezes aparece cada class
     1º For - adiciona no array possible todas as classes possiveis
@@ -445,22 +448,39 @@ def entropyGlobalCount(ydata):
 
 def entropyCalc(array):
     '''
-    recebe como argumento o nmero de vezes que cada classe aparece e calcula a entropia
-    1º for - Calcula o número total de classes
-    2º for - Calcula a Entropia em si
+    recebe como argumento o numero de vezes que cada classe aparece e calcula a entropia
+    for - Calcula a Entropia em si
     '''
     #print()
-    total, result = 0,0
-    for pos in array:
-        total += pos
+    total, result = sum(array),0
     for pos in array:
         result -= (pos/total * math.log2(pos/total))
     return result
 
+def giniCalc(array):
+    '''
+    recebe como argumento o numero de vezes que cada classe aparece e calcula o gini 
+    for - Calcula o Gini em si
+    '''
+    total, result = sum(array),1
+    for pos in array:
+        result -= (pos/total) ** 2
+    return result
 
+def errorCalc(array):
+    '''
+    recebe como argumento o numero de vezes que cada classe aparece e calcula o erro
+    for - Calcula o erro em si
+    #Nao funciona bem
+    '''
+    total, aux = sum(array), []
+    for pos in array:
+        aux.append(pos/total)
+    result = 1 - max(aux) 
+    return result
 
-#entropyGlobalValues = entropyGlobalCount(ydata)
-#entropyGlobal=entropyCalc(entropyGlobalValues)
+#globalTotalValues = globalTotalCount(ydata)
+#globalTotal=entropyCalc(globalTotalValues)
 
 # 2º Calcular entropy para cada value de cada atributo. Ex: Sunny, Rainny, Overcast do Outlook
 
@@ -485,7 +505,7 @@ def getValues(data, attributeList, attribute):
             values.append(value[attributePos[1][0]])
     return values
 
-def entropyValueCount(attribute, attributeList, value, xdata, ydata):
+def valueCount(attribute, attributeList, value, xdata, ydata):
     '''
     Função que conta o número de classes correspondentes a um value de um atributo
     1º For - adiciona no array possible todas as classes possiveis
@@ -506,7 +526,7 @@ def entropyValueCount(attribute, attributeList, value, xdata, ydata):
             count +=1
     return aux
 
-def calculateGain(attribute, attributeList, xdata, ydata, entropyGlobalValues ,entropyGlobal):
+def calculateGain(criterion,attribute, attributeList, xdata, ydata, globalTotalValues ,globalTotal):
     '''
     Função que calcula:
     1º - entropia para cada value de um atributo
@@ -517,25 +537,39 @@ def calculateGain(attribute, attributeList, xdata, ydata, entropyGlobalValues ,e
     values = getValues(xdata,attributeList, attribute)
     #print(f"Attribute: {attribute} Values: {values}")
     total = 0
-    for value in values:
-        entropyValues = entropyValueCount(attribute, attributeList, value, xdata, ydata)
-        entropy = entropyCalc(entropyValues)
-        total += (sum(entropyValues) / sum(entropyGlobalValues)) * entropy    
-    gain = entropyGlobal - total
-    return gain
 
-def chooseNode(attributeList,xdata, ydata,entropyGlobalValues, entropyGlobal):
+    if criterion == "entropy":
+        for value in values:
+            values = valueCount(attribute, attributeList, value, xdata, ydata)
+            entropy = entropyCalc(values)
+            total += (sum(values) / sum(globalTotalValues)) * entropy    
+        gain = globalTotal - total
+        return gain
+    elif criterion == "gini":
+        for value in values:
+            values = valueCount(attribute, attributeList, value, xdata, ydata)
+            gini = giniCalc(values)
+            total += (sum(values) / sum(globalTotalValues)) * gini
+        gain = globalTotal - total
+        return gain
+    elif criterion == "error":
+        for value in values:
+            values = valueCount(attribute, attributeList, value, xdata, ydata)
+            error = errorCalc(values)
+            total += (sum(values) / sum(globalTotalValues)) * error
+        gain = globalTotal - total
+        return gain
+
+def chooseNode(criterion,attributeList,xdata, ydata,globalTotalValues, globalTotal):
     '''
     Função que recebe a lista de attributes e calcula o ganho de cada e retorna o attributo com maior ganho,
     o atributo principal
     '''
     aux = []
     for attribute in attributeList[0]:
-        #print(f"Attribute: {attribute},Gain: {calculateGain(attribute, attributeList, xdata, ydata, entropyGlobalValues, entropyGlobal)}")
-        aux.append(calculateGain(attribute, attributeList, xdata, ydata, entropyGlobalValues, entropyGlobal))
-    print("aux: ",aux)
-    index = aux.index(max(aux))
-    #print(f"Escolheu Root: {attributeList[0][index]}")
+        #print(f"Attribute: {attribute},Gain: {calculateGain(attribute, attributeList, xdata, ydata, globalTotalValues, globalTotal)}")
+        aux.append(calculateGain(criterion,attribute, attributeList, xdata, ydata, globalTotalValues, globalTotal))
+        index = aux.index(max(aux))
     return attributeList[0][index]
 
 #rootNode = chooseNode(attributeList)
@@ -553,7 +587,7 @@ def entropyRootValues(rootNode, attributeList, valuesWithoutLeafs, xdata, ydata)
     '''
     aux=[]
     for attribute in valuesWithoutLeafs:
-        count = entropyValueCount(rootNode, attributeList, attribute, xdata, ydata)
+        count = valueCount(rootNode, attributeList, attribute, xdata, ydata)
         aux.append(entropyCalc(count))
     return aux
 
@@ -575,8 +609,8 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()        
     parser.add_argument('-f', "-file", action='store', dest='file_location', help='Path to the file that contains the data', required=True)
-    parser.add_argument('-c', '-criterion', action='store', dest='criterion', help='Choose criterion, it can be Gini or Entropy. By default: Gini', default='gini')
-    parser.add_argument('-p', '-prune', action='store_false', dest='prune', help='Set prune. By default: False', default=False)              
+    parser.add_argument('-c', '-criterion', action='store', dest='criterion', help='Choose criterion, it can be entropy, gini or error. By default: Entropy', default='entropy')
+    parser.add_argument('-p', '-prune', action='store_true', dest='prune', help='Set prune. By default: False', default=False)
     results = parser.parse_args()
 
 
@@ -587,7 +621,7 @@ if __name__ == '__main__':
 
     #x_train, x_test, y_train, y_test = train_test_split(xdata, ydata, random_state=0) #default test_size=25
 
-    tree = myDecisionTreeREPrune()
+    tree = myDecisionTreeREPrune(criterion=results.criterion, prune=results.prune)
     tree.fit(xdata,ydata,attributeList)
     #print(attributeList)
     #PrintTree(tree.root)
