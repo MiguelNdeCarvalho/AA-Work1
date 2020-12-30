@@ -20,13 +20,13 @@
 {
     \includegraphics[width=0.3\textwidth]{images/logo_universidade.png}
     \\[0.1cm]
-    \textbf{Gerador de Árvores} \\
+    \textbf{Gerador de Árvores de Decisão} \\
     Aprendizagem Automática
 }
 
 \author
 {
-    \textbf{Professor:} Luís Rato \\
+    \textbf{Professores:} Teresa Gonçalves \\ Luís Rato \\
     \textbf{Realizado por:} Miguel de Carvalho (43108) \\ João Pereira (42864) 
 }
 \date{\today}
@@ -41,26 +41,53 @@
 % -------------------------------------------------------------------------------------------
 \section{Introdução} 
 
-\hspace{0,5cm}Neste trabalho foi solicitado a realização de um programa que simule o \textbf{Escalonamento de Processos} num Modelo de 3 Estados, representado na figura abaixo. \par
+\hspace{0,5cm}Neste trabalho foi solicitado a realização de um programa que simule a criação de \textbf{Árvores de Decisão} com \textbf{pruning}, representado na figura abaixo. \par
 \begin{figure}[h!]
     \begin{center}
 	\includegraphics[width=0.5\textwidth]{images/tree-example.png}
-        \caption{Estrutura de uma Ávore}
+        \caption{Exemplo de uma Árvore de Decisão}
     \end{center}
 \end{figure}
-O \textbf{Escalonador de Processos} faz parte do \textbf{Sistema Opertivo} e é responsável por decidir em que momento cada processo estará no CPU. 
-Existem muitos algoritmos de escalonamento para realizar essa decisão. \par
-Neste trabalho serão utilizados o algoritmo \textbf{FCFS} e o \textbf{Round Robin (RR)}:
+A \textbf{Árvore de Decisão} é uma forma expressiva e fácil de perceber como será feita a decisão para os dados em questão.
+
+
+É constituída por:
 \begin{itemize}
-    \item O \textbf{FCFS} é um algoritmo de escalonamento não preemptivo que prioriza os processos pela ordem de chegada. Executa o processo todo do inicio ao fim sem o interromper, até estar concluído. Quando aparece um novo processo e ainda existe um em execução, esse novo fica em fila de espera.
-    \item O \textbf{Round Robin (RR)} é um algoritmo de escalonamento preemptivo que apresenta um funcionamento igual ao do \textbf{FCFS}, mas com tempo limite de execução, o \textbf{Quantum}. Assim, quando o processo se encontra em execução este será interrompido quando o tempo de execução for igual ao \textbf{Quantum} e fica em fila de espera (\textbf{READY}). 
+    \item \textbf{Nós (Nodes)} são as perguntas feitas para ser tomada uma decisão, por conseguinte a decisão irá escolher por qual \textbf{ramo} vai passar;
+    \item \textbf{Ramos (Branchs)} são as decisões que são tomadas, que vão levar a outro \textbf{nó} ou mesmo a uma \textbf{folha};
+    \item \textbf{Folhas (Leafs)} é a \textbf{classe} (resposta final) que corresponde à(s) decisão(ões).
+\end{itemize}
+\begin{figure}[h!]
+    \begin{center}
+	\includegraphics[width=0.5\textwidth]{images/tree-structure.png}
+        \caption{Estrutura de uma Árvore de Decisão}
+    \end{center}
+\end{figure}
+
+
+Existem vários \textbf{critérios} para realizar a decisão de qual deverá ser o \textbf{nó} escolhido, ou seja,
+qual deverá ser a melhor questão a ser feita em cada instante. \par
+Neste trabalho serão utilizados o seguintes critérios \textbf{Entropia}, \textbf{Gini} e o \textbf{Erro}:
+\begin{itemize}
+    \item A \textbf{Entropia} ; 
+    \item O \textbf{Gini} é ; 
+    \item O \textbf{Erro} é .
 \end{itemize}
 
 % -------------------------------------------------------------------------------------------
+\section{Implementação}
+
+% -------------------------------------------------------------------------------------------
+\section{Funções}
+% -------------------------------------------------------------------------------------------
+\section{Execução}
+
+% -------------------------------------------------------------------------------------------
+\section{Análise de Resultados}
 % -------------------------------------------------------------------------------------------
 \newpage
 \section{Conclusão} % Conclusão
-\hspace{0,5cm}Em suma, com a realização deste trabalho "Simulador de Escalonamento" fiquei muito mais esclarecido sobre o seu funcionamento. \par
+\hspace{0,5cm}Em suma, com a realização deste trabalho "Gerador de Árvores de Decisão" fiquei muito mais esclarecido sobre o seu funcionamento. \par
 Saliento que me ajudou a entender como funciona o escalonador e as condições que cada algoritmo (\textbf{FCFS}/\textbf{RR}), usa para proceder à mudança dos processos entre os estados e as respetivas diferenças de tempo no mesmo conjunto de processos, entre os respetivos algoritmos.  
 % -------------------------------------------------------------------------------------------
 \end{document}
