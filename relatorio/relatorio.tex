@@ -77,16 +77,48 @@ Neste trabalho serão utilizados o seguintes critérios \textbf{Entropia}, \text
 
 % -------------------------------------------------------------------------------------------
 \section{Implementação}
+\hspace{0,5cm}Inicialmente começámos por analisar os dados que nos foram fornecidos e tentámos criar
+a \textbf{Árvore de Decisão} com os dados mais pequenos, realizando todos os cálculos. Para podermos 
+ter uma ideia do que o nosso programa iria ter que realizar.
 
+Por conseguinte começámos por tentar automatizar a leitura e os cálculos todos necessários para que funcionasse
+com o critério \textbf{Entropia}.
+
+Após termos conseguido realizar tudo na prática para os dados do \textbf{Weather} e com o critério
+\textbf{Entropia}, tentámos com o resto dos dados que foram disponibilizado pelos professores e 
+fizémos as devidas correções para que funcionasse com todo o tipo de dados.
+
+De seguida, começámos por implementar os dois restantes critérios, o \textbf{Gini} e o \textbf{Erro}.
+
+Por último, testámos novamente com todos os dados e fizemos as devidas correções.
 % -------------------------------------------------------------------------------------------
 \section{Funções}
 % -------------------------------------------------------------------------------------------
 \section{Execução}
-
+\hspace{0,5cm}Para executar o \textbf{gerador de Árvores de Decisão} o utilizador deverá passar como argumento o ficheiro de \textbf{input}.
+Argumentos do Programa:
+\begin{itemize}
+    \item Localização do ficheiro \verb|"-f ficheiro.csv"| - argumento necessário, com a localização do ficheiro com os dados;
+    \item Escolha do critério \verb|"-c critério"| - por default o critério é \textbf{entropy}. Pode ser: \textbf{entropy}, \textbf{gini} ou \textbf{error};
+    \item Ligar/Desligar \textbf{pruning} \verb|"-p"| - por default o \textbf{pruning} está desligado.
+\end{itemize}
+\par Exemplos:
+\begin{itemize}
+    \item \verb|python myDecisionTreeREPrune.py -f dados/vote.csv| irá executar o \textbf{gerador de Árvores de Decisão} utilizando o critério \textbf{Entropy} com os dados do \verb|vote.csv| e \textbf{sem Pruning};
+    \item \verb|python myDecisionTreeREPrune.py -f dados/soybean.csv -c gini| irá executar o \textbf{gerador de Árvores de Decisão} utilizando o critério \textbf{Gini} com os dados do \verb|soybean.csv| e \textbf{sem Pruning};
+    \item \verb|python myDecisionTreeREPrune.py -f dados/weather.nominal.csv -c error| irá executar o \textbf{gerador de Árvores de Decisão} utilizando o critério \textbf{Error} com os dados do \verb|weather.nominal.csv| e \textbf{sem Pruning};
+    \item \verb|python myDecisionTreeREPrune.py -f dados/vote.csv -c gini -p| irá executar o \textbf{gerador de Árvores de Decisão} utilizando o critério \textbf{Gini} com os dados do \verb|vote.csv| e \textbf{com Pruning};
+\end{itemize}
 % -------------------------------------------------------------------------------------------
 \section{Análise de Resultados}
+\subsection{weather.nominal.csv}
+
+\subsection{contact-lenses.csv}
+
+\subsection{vote.csv}
+
+\subsection{soybean.csv}
 % -------------------------------------------------------------------------------------------
-\newpage
 \section{Conclusão} % Conclusão
 \hspace{0,5cm}Em suma, com a realização deste trabalho "Gerador de Árvores de Decisão" fiquei muito mais esclarecido sobre o seu funcionamento. \par
 Saliento que me ajudou a entender como funciona o escalonador e as condições que cada algoritmo (\textbf{FCFS}/\textbf{RR}), usa para proceder à mudança dos processos entre os estados e as respetivas diferenças de tempo no mesmo conjunto de processos, entre os respetivos algoritmos.  
