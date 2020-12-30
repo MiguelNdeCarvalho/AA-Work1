@@ -382,7 +382,6 @@ def errorCalc(array):
     '''
     recebe como argumento o numero de vezes que cada classe aparece e calcula o erro
     for - Calcula o erro em si
-    #Nao funciona bem
     '''
     total, aux = sum(array), []
     for pos in array:

@@ -1,0 +1,96 @@
+class Node (classe que representa cada no ou folha da arvore de decisão):
+
+    is_leaf: retorna true se o Node não tiver filhos (folha)
+
+    set/get_Data: se o Node for um ramo -> data="" (nó), caso contrario -> data="classe" (folha)
+    
+    set/get_Sons: lista de referencias dos nós filhos
+
+    sons_order: caso o Node seja considerado um nó esta variavel consiste numa lista que possui a ordem de "distribuição" dos valores de um dado atributo
+
+class myDecisionTreeREPrune (classe que representa um arvore de decisão):
+    
+    fit: função que constroi a arvore de decisão
+
+        homogeneous: esta função recebe os valores de classe dos objetos de teste
+        e averigua se os dados são homogeneos (todos os objetos possuem a mesma classificação )
+        Se forem, é returnado o valor da classe comum a todos obejetos e a arvore consiste numa unica folha 
+        (com o valor dessa classe)
+
+        grow_tree: função recursiva que constroi a arvore com o auxilio das seguintes funções:
+
+            globalTotalValues: Esta função retorna num array quantas vezes aparece cada class
+            1º For - adiciona no array possible todas as classes possiveis
+            2º For - percorre e verifica quantas vezes aparece cada posição possivel
+
+            globalTotalCount:   Esta função retorna num array quantas vezes aparece cada class
+            1º For - adiciona no array possible todas as classes possiveis
+            2º For - percorre e verifica quantas vezes aparece cada posição possivel
+
+            entropyCalc:  recebe como argumento o numero de vezes que cada classe aparece e calcula a entropia
+            for - Calcula a Entropia em si  
+
+            giniCalc: recebe como argumento o numero de vezes que cada classe aparece e calcula o gini 
+            for - Calcula o Gini em si
+
+            errorCalc:  recebe como argumento o numero de vezes que cada classe aparece e calcula o erro
+            for - Calcula o erro em si
+
+            chooseNode:    Função que recebe a lista de attributes e calcula o ganho de cada e retorna o attributo com maior ganho,
+                            o atributo principal
+
+            checkLeaf: função que verifica se os valores de um determinado atributo podem "determinar a classe de um objeto" (folha)
+                        a função retorna uma lista dos "valores folha"  e a uma lista com as respetivas classes
+        
+            isLeaf: Função que verifica se um atributo é uma folha, ou seja, só já tem uma classe
+                    1º - verifica quais as classes existentes para esse atributo
+                    2º - caso seja só 1, diz que é um Leaf.
+
+            valuesNotToLeafs: função que verifica se um determinado valor do atributo não é uma folha 
+                                e retorna esses valores e a "ordem" como devem estar 
+                                distribuidos os filhos no nó da arvore
+
+            setSons: função que define os filhos do nó. Os filhos podem ser folhas ou podem crescer mais (ramos)
+
+            removeAttribute: função que remove um atributo especifico de uma lista de atributos 
+                                retorna a lista sem o atributo e a posição onde este se encontrava
+
+            appendAttribute: função que adiciona um atributo especifico a uma lista de atributos 
+                                retorna a lista com o atributo na posição especificada
+
+            update_data: esta função "restringe" a data do conjunto de treino. Ex: no conjunto de dados original, 
+                        queremos os objetos cujo atributo "outlook" "seja igual a "sunny"
+                        A função retorna a data resultante dessa restrição e as "diferenças" (save_rows e save_value)
+                        entre o original e a data resultante 
+
+            applySaves: esta função pretende "reverter" as alterações aplicadas no conjunto
+                        de teste. Para isso é necessário voltar a colocar valor removido (save_value, Ex:sunny)
+                        no local correto (pos, Ex:0) e de seguida colocar todas as "rows" nas posições corretas
+                        (a lista save_rows possui um conjunto de listas com a seguinte estrutura: 
+                        [pos,conteudo da row, valor da classe], Ex: [0,[sunny,hot,high,FALSE],no])
+
+            getValues:  Função que retorna um array com os valores de um dado atributo
+            
+            valueCount:     Função que conta o número de classes correspondentes a um value de um atributo
+            1º For - adiciona no array possible todas as classes possiveis
+            2º For - percorre e verifica quantas vezes aparece cada posição possivel
+
+            calculateGain:    Função que calcula:
+            1º - entropia para cada value de um atributo
+            2º - a informação entropia de um atributo
+            3º - o ganho (gain) de um atributo
+            retorna o ganho de uma class
+
+            entropyRootValues:  Função que devolve a entropia de cada value do Atributo Principal (RootNode)
+
+
+    score: função que utiliza um conjunto de dados de teste para avaliar a 
+    arvore de decisão construida  (na função fit)
+
+        iterate_for: função que recebe um "objeto" do conjunto de teste e 
+        faz uma "iteração" pela arvore de decisão com o objetivo de obter 
+        uma classificação. De seguida, essa decisão vai ser comparada com o valor 
+        esperado do objeto, se ambos forem identicos, dá return de um "hit",
+        caso contrário, dá return de um "miss"
+
+nota: não conseguimos implementar pruning
